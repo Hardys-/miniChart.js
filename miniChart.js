@@ -1,3 +1,40 @@
+/*
+miniChart Object = {
+	"animattion": true / false,
+	"title": "title of the chart",
+	"frame-color": "rgba(0,0,0,0.8)", 
+	"canvas": canvas Object,
+	"chartType": pie/line/bar,
+	"max":true/false,   //mark the maximum value
+	"min":true/false,   //mark the minimum value
+
+	"data":[
+		{ "title": titleOne,
+		  "font":[size,family,weight,style],
+			"color": "rgba(0,0,0,0.8)",
+
+			"values":[1,2,3,4,5,6,7,8,9,0];
+		},
+		{ "title": titleTwo,
+		  "font":[size,family,weight,style],
+			"color": "rgba(0,0,0,0.8)",
+
+			"values":[1,2,3,4,5,6,7,8,9,0];
+		},
+		{ "title": titleThree,
+		  "font":[size,family,weight,style],
+			"color": "rgba(0,0,0,0.8)",
+
+			"values":[1,2,3,4,5,6,7,8,9,0];
+		}
+	]
+}
+
+*/
+
+
+
+
 
 function test(){http://code.tutsplus.com/tutorials/build-your-first-javascript-library--net-26796}
 
@@ -236,4 +273,4 @@ function drawMouseInfo(){//draw temp & time info on Canvas
         searchPrint(Math.ceil((mousePos.x - 46)/(len/time)),m2,mousePos);
       }, false);
 };
-/*end of canvas library*/
+/*end of canvas library*/ 
