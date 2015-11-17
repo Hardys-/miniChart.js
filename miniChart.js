@@ -2,7 +2,7 @@
 miniChart Object = {
 	"animattion": true / false,
 	"title": "title of the chart",
-	"frame-color": "rgba(0,0,0,0.8)", 
+	"frame-color": "rgba(0,0,0,0.8)",
 	"canvas": canvas Object,
 	"chartType": pie/line/bar,
 	"max":true/false,   //mark the maximum value
@@ -29,14 +29,70 @@ miniChart Object = {
 		}
 	]
 }
-
 */
 
 
+/*!
+ * miniChart.js
+ * Version: 1.0
+ *
+ * Copyright 2015 Hao Hu
+ * Released under the MIT license
+ * https://github.com/Hardys-/miniChart
+ */
 
 
+(function(){
 
-function test(){http://code.tutsplus.com/tutorials/build-your-first-javascript-library--net-26796}
+	"use strict";
+
+	//Declare root variable - window in the browser, global on the server
+	var root = this,
+		previous = root.miniChart;
+
+	//Occupy the global variable of Chart(width, height)
+	var miniChart = function(context){
+		var chart = this;
+		this.canvas = context.canvas;
+		this.chart = context;
+
+		var width = this.width ;
+		var height = this.height ;
+
+		// For Firefox
+		context.canvas.width  = width;
+		context.canvas.height = height;
+
+		width = this.width = context.canvas.width;
+		height = this.height = context.canvas.height;
+
+		return this;
+	};
+
+	//Global , defaults for minichart
+	miniChart.defaults = {
+		global: {
+			// Boolean - chart Animation
+			animation: true,
+
+
+		}
+	};
+
+	//Create a dictionary of chart types, to allow for extension of existing types
+	Chart.types = {};
+
+	//Global Chart helpers object for utility methods and classes
+	var helpers = Chart.helpers = {};
+
+		//-- Basic js utility methods
+  var each = helpers.each = function(loopable,callback,self){
+  };
+
+
+}).call(this);
+
+//code.tutsplus.com/tutorials/build-your-first-javascript-library--net-26796}
 
 
 function drawFrame(temp,time,tempHigh){
@@ -273,4 +329,4 @@ function drawMouseInfo(){//draw temp & time info on Canvas
         searchPrint(Math.ceil((mousePos.x - 46)/(len/time)),m2,mousePos);
       }, false);
 };
-/*end of canvas library*/ 
+/*end of canvas library*/
