@@ -1,6 +1,7 @@
 # miniChart
 miniChart is a simple JavaScript library with 3 different types of core charts (bar, line, pie).
 
+<h6>Chart Object:</h6>
 <pre>
 /*
 miniChart Object = {
@@ -31,3 +32,11 @@ miniChart Object = {
 }
 */
 </pre>
+
+<h6>How to use:</h6>
+
+<h6>Bar Chart:</h6>
+
+<h6>Line Chart:</h6>
+
+<h6>Pie Chart:</h6>
