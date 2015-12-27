@@ -1,3 +1,12 @@
+/*!
+ * miniChart.js
+ * Version: 1.0
+ *
+ * Copyright 2015 Hao Hu
+ * Released under the MIT license
+ * https://github.com/Hardys-/miniChart
+ */
+
 /*
 miniChart Object = {
 	"animattion": true / false,
@@ -31,84 +40,76 @@ miniChart Object = {
 }
 */
 
+(function(window) {
+    var _private = {},
+        methods = {},
+				object,
+        value, topic, init;
 
-/*!
- * miniChart.js
- * Version: 1.0
- *
- * Copyright 2015 Hao Hu
- * Released under the MIT license
- * https://github.com/Hardys-/miniChart
- */
+		//set method
+		methods.setObject = function(object) {
+        // Set the property & value
+				this.object = object;
+				console.log(object);
+				console.log("chart: "+object.chart);
+				console.log(typeof(object));
+        return this;
+    };
 
-
-(function(){
-
-	"use strict";
-
-	//Declare root variable - window in the browser, global on the server
-	var root = this,
-		previous = root.miniChart;
-
-	//Occupy the global variable of Chart(width, height)
-	var miniChart = function(context){
-		var chart = this;
-		this.canvas = context.canvas;
-		this.chart = context;
-
-		var width = this.width ;
-		var height = this.height ;
-
-		// For Firefox
-		context.canvas.width  = width;
-		context.canvas.height = height;
-
-		width = this.width = context.canvas.width;
-		height = this.height = context.canvas.height;
-
-		return this;
-	};
-
-	//Global , defaults for minichart
-	miniChart.defaults = {
-		global: {
-			// Boolean - chart Animation
-			animation: true,
-
-
+    // draw the chart
+    methods.go = function(){
+				//var chart = object.chart;
+				var chart = this.object.chart;
+				chart.fillRect(47,45,50,40);
 		}
-	};
 
-	//Create a dictionary of chart types, to allow for extension of existing types
-	Chart.types = {};
+    // Init method setting the topic and returning the methods.
+    init = function(_topic) {
+        topic = _topic;
+        return methods;
+    };
 
-	//Global Chart helpers object for utility methods and classes
-	var helpers = Chart.helpers = {};
+    // Exposure when being used in an AMD environment, e.g. RequireJS
+    if (typeof define === 'function' && define.amd) {
+        define(function() {
+            return init;
+        });
+        return;
+    }
 
-		//-- Basic js utility methods
-  var each = helpers.each = function(loopable,callback,self){
-  };
+    // Exposure when being used with NodeJS
+    if ('undefined' !== typeof module && module.exports) {
+        module.exports = init;
+        return;
+    }
+
+    // Last-in-the-line exposure to the window, if it exists
+    window.miniChart = init;
+
+    // This line either passes the `window` as an argument or
+    // an empty Object-literal if `window` is not defined.
+}(('undefined' !== typeof window) ? window : {}));
 
 
-}).call(this);
+
 
 //code.tutsplus.com/tutorials/build-your-first-javascript-library--net-26796}
 
-
+/*
 function drawFrame(temp,time,tempHigh){
-	/*Relative value for diff resolution*/
+	/*Relative value for diff resolution*//*
 	var canvas = document.getElementById("myCanvas");
 	var chart = canvas.getContext("2d");
 	len = Math.ceil($("#myCanvas").width() * 0.9);
 	hei = Math.ceil($("#myCanvas").height() * 0.8);
-	/*Draw frame*/
+	/*Draw frame*//*
 	chart.fillStyle = "rgba(19,127,150,0.8)";
         chart.fillRect(42, 40, len+10, hei+10);
         chart.fill();
 	chart.fillStyle="#ffffff";
 	chart.fillRect(47,45,len,hei);
 	chart.fill();
-	/*Draw Ver line*/
+	/*Draw Ver line*//*
 	chart.strokeStyle = "rgba(163,212,214,0.6)";
 	chart.lineWidth=2;
 	chart.beginPath();
@@ -127,12 +128,12 @@ function drawFrame(temp,time,tempHigh){
 	}
 	chart.stroke();
 }
-/*Draw the text   */
+/*Draw the text   *//*
 function drawText(temp,tempHigh,tempLow){
 	var canvas = document.getElementById("myCanvas");
 	var chart = canvas.getContext("2d");
 	hei = Math.ceil($("#myCanvas").height() * 0.8);
-  /*Refresh*/
+  /*Refresh*//*
   chart.fillStyle="#ffffff";
   chart.fillRect(0, 0, 42, 50 + hei);
   chart.fill();
@@ -145,7 +146,7 @@ function drawText(temp,tempHigh,tempLow){
 		chart.fillText(txt,15,i*hei/temp+48);
 	}
 }
-/*drawTag draw a tag, at Xth grid, temp with a label of text*/
+/*drawTag draw a tag, at Xth grid, temp with a label of text*//*
 function drawTag(X,curTemp,text){
 	var canvas = document.getElementById("myCanvas");
 	var chart = canvas.getContext("2d");
@@ -153,7 +154,7 @@ function drawTag(X,curTemp,text){
   var hei = Math.ceil($("#myCanvas").height() * 0.8);
   var x = Math.ceil((X-0.5)*len/time+46 + 15) ; //x is the time line position
   var y = (tempHigh - curTemp)*(hei/(tempHigh-tempLow))+44 - 18; //y1 is the temp1 line position
-	/*Draw the point*/
+	/*Draw the point*//*
   chart.strokeStyle = "rgba(70,70,70,0.15)";
   chart.beginPath();
   chart.moveTo(x-15,y+18);
@@ -163,7 +164,7 @@ function drawTag(X,curTemp,text){
 	chart.beginPath();
 	chart.arc(x, y, 2, 0, 2 * Math.PI);
 	chart.fill();
-	/*Draw the tag*/
+	/*Draw the tag*//*
 	chart.beginPath();
 	chart.moveTo(x+4,y-4);
 	chart.lineTo(x+10,y-8);
@@ -181,14 +182,14 @@ function drawTag(X,curTemp,text){
 	chart.fillStyle ="#ffffff";
 	chart.fillText(text,x+12,y+2);
 }
-/*drawTag draw a label, at position(x,y) with a label of id*/
+/*drawTag draw a label, at position(x,y) with a label of id*//*
 function drawLabel(X,temp2,text,rgba){
 	var canvas = document.getElementById("myCanvas");
 	var chart = canvas.getContext("2d");
   var len = Math.ceil($("#myCanvas").width() * 0.9);
   var y = (tempHigh - temp2)*(hei/(tempHigh-tempLow))+52; //y is the temp position
   var x = Math.ceil((X-0.5)*len/time+46) ; //x is the time line position
-  /*Draw the arrow*/
+  /*Draw the arrow*//*
 	chart.fillStyle = rgba;
 	chart.beginPath();
 	chart.moveTo(x-3,y+3);
@@ -204,7 +205,7 @@ function drawLabel(X,temp2,text,rgba){
   chart.closePath();
   chart.fill();
 }
-/*drawLine(temp1,temp2,rgb) temp1,temp2: points; rgb: rgb color, X:point2 time line */
+/*drawLine(temp1,temp2,rgb) temp1,temp2: points; rgb: rgb color, X:point2 time line *//*
 function drawLine(temp1,temp2,X,rgb,w,type){
 	var canvas = document.getElementById("myCanvas");
 	var chart = canvas.getContext("2d");
@@ -214,7 +215,7 @@ function drawLine(temp1,temp2,X,rgb,w,type){
 		var x1 = Math.ceil((X-1.5)*len/time+46) ; //x1 is the time line position
 		var y1 = (tempHigh - temp1)*(hei/(tempHigh-tempLow))+44; //y1 is the temp1 line position
 		chart.fillStyle = rgb;
-		/*Draw point1*/
+		/*Draw point1*//*
 		chart.beginPath();
     chart.lineWidth = w;
 		chart.arc(x1, y1, 3, 0, 2 * Math.PI);
@@ -225,7 +226,7 @@ function drawLine(temp1,temp2,X,rgb,w,type){
 		var x2 = Math.ceil((X-0.5)*len/time+46) ; //x2 is the time line position
 		var y1 = (tempHigh - temp1)*(hei/(tempHigh-tempLow))+44; //y1 is the temp1 line position
 		var y2 = (tempHigh - temp2)*(hei/(tempHigh-tempLow))+44; //y2 is the temp1 line position
-    /*Draw Line*/
+    /*Draw Line*//*
     chart.strokeStyle = rgb;
     chart.lineWidth = w;
     chart.beginPath();
@@ -234,14 +235,14 @@ function drawLine(temp1,temp2,X,rgb,w,type){
     chart.closePath();
     chart.stroke();
     if(type == 1){ //regular line
-  		/*Draw point1*/
+  		/*Draw point1*//*
       chart.fillStyle = rgb;
       chart.lineWidth = w;
   		chart.beginPath();
   		chart.arc(x1, y1, 3, 0, 2 * Math.PI);
       chart.closePath();
   		chart.fill();
-  		/*Draw point2*/
+  		/*Draw point2*//*
       chart.lineWidth = w;
   		chart.beginPath();
   		chart.arc(x2, y2, 3, 0, 2 * Math.PI);
