@@ -28,39 +28,37 @@ miniChart Object = {
 		  "font":[size,family,weight,style],
 			"color": "rgba(0,0,0,0.8)",
 
-			"values":[1,2,3,4,5,6,7,8,9,0];
+			"values":[1,2,3,4,5,6,7,8,9,0],
 		},
 		{ "title": titleThree,
 		  "font":[size,family,weight,style],
 			"color": "rgba(0,0,0,0.8)",
 
-			"values":[1,2,3,4,5,6,7,8,9,0];
+			"values":[1,2,3,4,5,6,7,8,9,0],
 		}
 	]
 }
 */
 
 (function(window) {
-    var _private = {},
-        methods = {},
+    var methods = {},
 				object,
-        value, topic, init;
+        value,
+        topic,
+        init,
+        chart;
 
 		//set method
-		methods.setObject = function(object) {
+		methods.setObject = function(_object) {
         // Set the property & value
-				this.object = object;
-				console.log(object);
-				console.log("chart: "+object.chart);
-				console.log(typeof(object));
+				object = _object;
+        chart = _object.canvas.getContext("2d");
         return this;
     };
 
     // draw the chart
     methods.go = function(){
-				//var chart = object.chart;
-				var chart = this.object.chart;
-				chart.fillRect(47,45,50,40);
+				drawFrame();
 		}
 
     // Init method setting the topic and returning the methods.
@@ -86,8 +84,16 @@ miniChart Object = {
     // Last-in-the-line exposure to the window, if it exists
     window.miniChart = init;
 
-    // This line either passes the `window` as an argument or
-    // an empty Object-literal if `window` is not defined.
+
+    /*begin of a set of functions*/
+    function drawFrame(){
+      chart.fillRect(47,45,50,40);
+      chart.fillText("Hello world!",10,10);
+    }
+
+    /*end of function set*/
+// This line either passes the `window` as an argument or
+// an empty Object-literal if `window` is not defined.
 }(('undefined' !== typeof window) ? window : {}));
 
 
