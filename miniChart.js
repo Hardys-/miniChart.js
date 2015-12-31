@@ -13,7 +13,7 @@ miniChart Object = {
   "canvas": canvas Object,
   "chartType": pie/line/bar,
   "feedback":true,    //interactive when mouse on
-	"title": "title of the chart",
+	"title": ["title of the chart","title font"],
   "lines":[15,15,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)"],
   "frameStyle":["line  / frame", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
@@ -92,10 +92,10 @@ miniChart Object = {
     	len = Math.ceil(canvas.width * 0.92);
     	hei = Math.ceil(canvas.height * 0.92);
       space = Math.ceil(canvas.width * 0.02);
-      hor = (lineStyle[0] === "undefined")? 0 : lineStyle[0];
-      ver = (lineStyle[1] === "undefined")? 0 : lineStyle[1];
+      hor = (typeof lineStyle === "undefined")? 0 : lineStyle[0];
+      ver = (typeof lineStyle === "undefined")? 0 : lineStyle[1];
     	/*Draw frame*/
-      chart.fillStyle = (fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
+      chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
       chart.fillRect(space, space, len, hei);
       chart.fill();
       if (frame[0] == "frame"){
@@ -105,7 +105,7 @@ miniChart Object = {
       }
 
     	/*Draw Ver line*/
-    	chart.strokeStyle = (lineStyle[3] === "undefined")? "rgba(163,212,214,0.6)":lineStyle[3];
+    	chart.strokeStyle = (typeof lineStyle === "undefined")? "rgba(163,212,214,0.6)":lineStyle[3];
     	chart.lineWidth=2;
     	chart.beginPath();
     	for(i = 1; i < ver; i++){
@@ -115,7 +115,7 @@ miniChart Object = {
     	chart.stroke();
 
     	/*Draw Hor line*/
-    	chart.strokeStyle = (lineStyle[2] === "undefined")? "rgba(70,70,70,0.2)":lineStyle[2];
+    	chart.strokeStyle = (typeof lineStyle === "undefined")? "rgba(70,70,70,0.2)":lineStyle[2];
     	chart.lineWidth = 1;
     	chart.beginPath();
     	for(i = 1; i < hor; i++){
@@ -123,6 +123,15 @@ miniChart Object = {
     		chart.lineTo(space-frame[1]+len,i*(hei)/hor + space -1);
     	}
     	chart.stroke();
+
+      //char title
+      if(typeof object.title != "undefined"){
+        var titleX = Math.ceil(len/2)-object.title[0].length*5;
+        chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
+        chart.font=object.title[1];
+        chart.fillText(object.title[0],titleX,35);
+        chart.fill;
+      }
     }
 
     /*end of function set*/
