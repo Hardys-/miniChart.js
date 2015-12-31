@@ -60,6 +60,7 @@ miniChart Object = {
     // draw the chart
     methods.go = function(){
 				drawFrame(object.lines,object.title,object.frameStyle,object.frameFillStyle);
+        if (object.chartType == "bar") barChart(object.data);
 		}
 
     // Init method setting the topic and returning the methods.
@@ -89,9 +90,9 @@ miniChart Object = {
     /*begin of a set of functions*/
     function drawFrame(lineStyle,title,frame,fillStyle){ //hor: # of hor lines; ver: # of ver lines.
       /*Relative value for diff resolution*/
-    	len = Math.ceil(canvas.width * 0.92);
-    	hei = Math.ceil(canvas.height * 0.92);
-      space = Math.ceil(canvas.width * 0.02);
+    	len = Math.ceil(canvas.width * 0.85);
+    	hei = Math.ceil(canvas.height * 0.85);
+      space = Math.ceil(canvas.width * 0.06);
       hor = (typeof lineStyle === "undefined")? 0 : lineStyle[0];
       ver = (typeof lineStyle === "undefined")? 0 : lineStyle[1];
     	/*Draw frame*/
@@ -129,11 +130,26 @@ miniChart Object = {
         var titleX = Math.ceil(len/2)-object.title[0].length*5;
         chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
         chart.font=object.title[1];
-        chart.fillText(object.title[0],titleX,35);
+        chart.fillText(object.title[0],titleX,space+15);
         chart.fill;
       }
     }
 
+    function barChart(data){
+      var	len = Math.ceil(canvas.width * 0.85);
+      var barLen = (data[0].values !== "undifined")? Math.ceil(len / (data[0].values.length* data.length*1.5)):0; // 0.5 for
+      var barMove = Math.ceil(barLen * data.length *0.8 *1.5 + barLen*0.2);
+      var barY = Math.ceil(canvas.width * 0.06)+Math.ceil(canvas.height * 0.85)-object.frameStyle[1]; //start Y pos
+      var barX = Math.ceil(canvas.width * 0.06)+object.frameStyle[1]; //start X pos
+      for(i = 0; i < data.length ; i ++){
+          chart.fillStyle = data[i].color;
+          for(j = 0; j < data[i].values.length; j++){
+            var barHei = Math.ceil(0.3*data[i].values[j]);
+            chart.fillRect(Math.ceil(barX+Math.ceil(barLen*0.9)+j*barMove+i*barLen*0.8),barY-barHei,barLen,barHei);
+          }
+          chart.fill;
+      }
+    }
     /*end of function set*/
 
 // This line either passes the `window` as an argument or
