@@ -10,10 +10,13 @@
 /*
 miniChart Object = {
 	"animattion": true / false,
+  "canvas": canvas Object,
+  "chartType": pie/line/bar,
+  "feedback":true,    //interactive when mouse on
 	"title": "title of the chart",
-	"frame-color": "rgba(0,0,0,0.8)",
-	"canvas": canvas Object,
-	"chartType": pie/line/bar,
+  "lines":[15,15,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)"],
+  "frameStyle":["line  / frame", width],
+  "frameFillStyle":  "rgba(0,0,0,0.8)",
 	"max":true/false,   //mark the maximum value
 	"min":true/false,   //mark the minimum value
 
@@ -21,19 +24,16 @@ miniChart Object = {
 		{ "title": titleOne,
 		  "font":[size,family,weight,style],
 			"color": "rgba(0,0,0,0.8)",
-
 			"values":[1,2,3,4,5,6,7,8,9,0];
 		},
 		{ "title": titleTwo,
 		  "font":[size,family,weight,style],
 			"color": "rgba(0,0,0,0.8)",
-
 			"values":[1,2,3,4,5,6,7,8,9,0],
 		},
 		{ "title": titleThree,
 		  "font":[size,family,weight,style],
 			"color": "rgba(0,0,0,0.8)",
-
 			"values":[1,2,3,4,5,6,7,8,9,0],
 		}
 	]
@@ -43,7 +43,7 @@ miniChart Object = {
 (function(window) {
     var methods = {},
 				object,
-        value,
+        canvas,
         topic,
         init,
         chart;
@@ -52,13 +52,14 @@ miniChart Object = {
 		methods.setObject = function(_object) {
         // Set the property & value
 				object = _object;
+        canvas = _object.canvas;
         chart = _object.canvas.getContext("2d");
         return this;
     };
 
     // draw the chart
     methods.go = function(){
-				drawFrame();
+				drawFrame(object.lines,object.title,object.frameStyle,object.frameFillStyle);
 		}
 
     // Init method setting the topic and returning the methods.
@@ -86,53 +87,54 @@ miniChart Object = {
 
 
     /*begin of a set of functions*/
-    function drawFrame(){
-      chart.fillRect(47,45,50,40);
-      chart.fillText("Hello world!",10,10);
+    function drawFrame(lineStyle,title,frame,fillStyle){ //hor: # of hor lines; ver: # of ver lines.
+      /*Relative value for diff resolution*/
+    	len = Math.ceil(canvas.width * 0.92);
+    	hei = Math.ceil(canvas.height * 0.92);
+      space = Math.ceil(canvas.width * 0.02);
+      hor = (lineStyle[0] === "undefined")? 0 : lineStyle[0];
+      ver = (lineStyle[1] === "undefined")? 0 : lineStyle[1];
+    	/*Draw frame*/
+      chart.fillStyle = (fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
+      chart.fillRect(space, space, len, hei);
+      chart.fill();
+      if (frame[0] == "frame"){
+      	chart.clearRect(space+frame[1],space+frame[1],len-frame[1]*2,hei-frame[1]*2);
+      }else{
+        chart.clearRect(space+frame[1],space,len,hei-frame[1]);
+      }
+
+    	/*Draw Ver line*/
+    	chart.strokeStyle = (lineStyle[3] === "undefined")? "rgba(163,212,214,0.6)":lineStyle[3];
+    	chart.lineWidth=2;
+    	chart.beginPath();
+    	for(i = 1; i < ver; i++){
+    		chart.moveTo(i*len/ver+space-1,space+frame[1]);
+    		chart.lineTo(i*len/ver+space-1,space-frame[1]+hei);
+    	}
+    	chart.stroke();
+
+    	/*Draw Hor line*/
+    	chart.strokeStyle = (lineStyle[2] === "undefined")? "rgba(70,70,70,0.2)":lineStyle[2];
+    	chart.lineWidth = 1;
+    	chart.beginPath();
+    	for(i = 1; i < hor; i++){
+    		chart.moveTo(space+frame[1],i*(hei)/hor + space - 1);
+    		chart.lineTo(space-frame[1]+len,i*(hei)/hor + space -1);
+    	}
+    	chart.stroke();
     }
 
     /*end of function set*/
+
 // This line either passes the `window` as an argument or
 // an empty Object-literal if `window` is not defined.
 }(('undefined' !== typeof window) ? window : {}));
 
 
-
-
-//code.tutsplus.com/tutorials/build-your-first-javascript-library--net-26796}
-
 /*
 function drawFrame(temp,time,tempHigh){
-	/*Relative value for diff resolution*//*
-	var canvas = document.getElementById("myCanvas");
-	var chart = canvas.getContext("2d");
-	len = Math.ceil($("#myCanvas").width() * 0.9);
-	hei = Math.ceil($("#myCanvas").height() * 0.8);
-	/*Draw frame*//*
-	chart.fillStyle = "rgba(19,127,150,0.8)";
-        chart.fillRect(42, 40, len+10, hei+10);
-        chart.fill();
-	chart.fillStyle="#ffffff";
-	chart.fillRect(47,45,len,hei);
-	chart.fill();
-	/*Draw Ver line*//*
-	chart.strokeStyle = "rgba(163,212,214,0.6)";
-	chart.lineWidth=2;
-	chart.beginPath();
-	for(i = 1; i < time; i++){
-		chart.moveTo(i*len/time+47-1,45);
-		chart.lineTo(i*len/time+47-1,45+hei);
-	}
-	chart.stroke();
-	//Draw Hor line
-	chart.strokeStyle="rgba(70,70,70,0.2)";
-	chart.lineWidth=1;
-	chart.beginPath();
-	for(i = 1; i < temp; i++){
-		chart.moveTo(47,i*(hei)/temp+45-1);
-		chart.lineTo(47+len,i*(hei)/temp+45-1);
-	}
-	chart.stroke();
+
 }
 /*Draw the text   *//*
 function drawText(temp,tempHigh,tempLow){
