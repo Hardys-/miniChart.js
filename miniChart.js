@@ -14,7 +14,7 @@ miniChart Object = {
   "chartType": pie/line/bar,
   "feedback":true,    //interactive when mouse on
 	"title": ["title of the chart","title font"],
-  "lines":[15,15,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)"],
+  "lines":[15,15,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)",true/false, true/false],
   "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
 	"max":true/false,   //mark the maximum value
@@ -50,7 +50,7 @@ miniChart Object = {
         canvas,
         topic,
         init,
-        max,min,
+        MAX,MIN,AVE,
         chart;
 
 		//set method
@@ -59,15 +59,17 @@ miniChart Object = {
 				object = _object;
         canvas = _object.canvas;
         chart = _object.canvas.getContext("2d");
-        min = findMin(object.data);
-        max = findMax(object.data);
+        MIN = findMin(object.data);
+        MAX = findMax(object.data);
         return this;
     };
 
     // draw the chart
     methods.go = function(){
 				drawFrame(object.lines,object.title,object.frameStyle,object.frameFillStyle);
-        if (object.chartType == "bar") barChart(object.data);
+        if (object.chartType == "bar") {barChart(object.data);}
+        else if (object.chartType == "line") { lineChart(object.data);}
+        else if (object.chartType == "pie") { pieChart(object.data);}
 		}
 
     // Init method setting the topic and returning the methods.
@@ -100,7 +102,6 @@ miniChart Object = {
     	len = Math.ceil(canvas.width * 0.8);
     	hei = Math.ceil(canvas.height * 0.8);
       space = Math.ceil(canvas.width * 0.08);
-      hor = (typeof lineStyle === "undefined")? 0 : lineStyle[0];
       ver = (typeof lineStyle === "undefined")? 0 : lineStyle[1];
     	/*Draw frame*/
       chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
@@ -119,52 +120,84 @@ miniChart Object = {
     	chart.lineWidth=2;
     	chart.beginPath();
     	for(i = 1; i < ver; i++){
-    		chart.moveTo(i*len/ver+space-1,space+frame[1]);
+    		chart.moveTo(i*len/ver+space-1,space+frame[1]+26);
     		chart.lineTo(i*len/ver+space-1,space-frame[1]+hei);
     	}
     	chart.stroke();
 
-    	/*Draw Hor line*/
-    	chart.strokeStyle = (typeof lineStyle === "undefined")? "rgba(70,70,70,0.2)":lineStyle[2];
-    	chart.lineWidth = 1;
-    	chart.beginPath();
-    	for(i = 1; i < hor; i++){
-    		chart.moveTo(space+frame[1],i*(hei)/hor + space - 1);
-    		chart.lineTo(space-frame[1]+len,i*(hei)/hor + space -1);
-    	}
+    	/*Draw Hor line & label*/
+      var chartTop = findTop(MAX);
+      var chartBom = (MIN > 0)? 0: MIN;
+      var grids = (typeof lineStyle === "undefined" || lineStyle[0] == 0 )? 4 : lineStyle[0];//default value
+
+      chart.font = "10px Calibri";
+      chart.fillStyle ="#373838";
+      chart.strokeStyle = (typeof lineStyle === "undefined")? "rgba(70,70,70,0.2)":lineStyle[2];
+      chart.lineWidth = 1;
+      chart.beginPath();
+      for(i = 0; i <= grids  ; i++){
+        var txt = (i*((chartTop-chartBom)/ grids)+chartBom).toFixed(2);
+        chart.fillText(txt, 5, hei+space - i*(hei-30)/grids - frame[1] + 2);
+        if(lineStyle !=="undifined" && lineStyle[4] && i>0){
+          chart.moveTo(space+frame[1],Math.round(hei+space - i*(hei-30)/grids - frame[1]));
+          chart.lineTo(space-frame[1]+len,Math.round(hei+space - i*(hei-30)/grids - frame[1]));
+        }
+      }
     	chart.stroke();
 
       //char title
       if(typeof object.title != "undefined"){
-        var titleX = Math.ceil(len/2)-object.title[0].length*5;
+        var fp = (isNaN(parseInt(object.title[1])))?6:Math.round(parseInt(object.title[1]) *0.3);//default font size is 20px
+        var titleX = Math.round(canvas.width/2)-object.title[0].length*fp;
         chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
         chart.font=object.title[1];
-        chart.fillText(object.title[0],titleX,space+25);
+        chart.fillText(object.title[0],titleX,space+22);
         chart.fill;
       }
+
 
     }
 
     function barChart(data){
       var	len = Math.ceil(canvas.width * 0.8);
+      var hei = Math.ceil(canvas.height * 0.8);
       var barLen = (data[0].values !== "undifined")? Math.ceil(len / (data[0].values.length* data.length*1.5)):0; // 0.5 for
       var barMove = Math.ceil(barLen * data.length *0.8 *1.5 + barLen*0.2);
-      var barY = Math.ceil(canvas.width * 0.08)+Math.ceil(canvas.height * 0.8)-object.frameStyle[1]; //start Y pos
+
+      var chartBase = Math.ceil(canvas.width * 0.08)+Math.ceil(canvas.height * 0.8)-object.frameStyle[1];
+      var chartBom = (MIN > 0)? 0: MIN;
+      var scale = ((hei - 30)/(findTop(MAX) - chartBom )).toFixed(2);
+      var barY = (MIN > 0)? chartBase : chartBase + Math.round(MIN*scale); //start Y pos
       var barX = Math.ceil(canvas.width * 0.08)+object.frameStyle[1]; //start X pos
-      var scale = hei - 25
+
       /*draw bars*/
       for(i = 0; i < data.length ; i ++){
           chart.fillStyle = data[i].color;
           for(j = 0; j < data[i].values.length; j++){
-            var barHei = Math.ceil(0.3*data[i].values[j]);
+            var barHei = Math.ceil(scale*data[i].values[j]);
             chart.fillRect(Math.ceil(barX+Math.ceil(barLen*0.9)+j*barMove+i*barLen*0.8),barY-barHei,barLen,barHei);
           }
           chart.fill;
       }
 
+      /*offset*/
+      if(MIN < 0){
+        chart.font = "10px Calibri";
+      	chart.fillStyle ="#373838";
+        chart.clearRect(0,barY-12,Math.ceil(canvas.width * 0.08),12);
+        chart.fillText("0.00", 5, barY+2);
+        chart.fill();
+        chart.strokeStyle = (typeof object.frameFillStyle !== "undefined")? object.frameFillStyle:"rgba(19,127,150,0.8)";
+        chart.lineWidth = 1;
+        chart.beginPath();
+        chart.moveTo(barX, barY);
+        chart.lineTo(barX+len - 20 , barY);
+        chart.stroke();
+      }
+
       /*draw labels*/
       var labelX = 0;
-      var fp = Math.round(parseInt(object.labelsFont) *0.6); //font pixer, 0.6 is the scale of convert px to pixer
+      var fp = (isNaN(parseInt(object.labelsFont)))?12:Math.round(parseInt(object.labelsFont) *0.6); //font pixel, 0.6 is the scale of convert px to pixel
       var num = Math.round(barMove/fp); //how many chars can be put in the place,
       chart.font = object.labelsFont;
       chart.fillStyle = object.labelStyle;
@@ -178,13 +211,21 @@ miniChart Object = {
       chart.fill;
     }
 
+    function lineChart(data){}
+
+    function pieChart(data){}
+
     function findMax(list){
         var ori = list[0].values[0];
+        var sum = 0, count = 0;
         for(i = 0 ; i < list.length; i++){
             for( j = 0; j < list[i].values.length; j++){
+              count++;
+              sum += list[i].values[j];
               if(list[i].values[j] > ori) ori = list[i].values[j];
             }
         }
+        AVE = (sum/count).toFixed(2);
         return ori;
     }
 
@@ -196,6 +237,17 @@ miniChart Object = {
           }
       }
       return ori;
+    }
+
+    function findTop(input){
+    	var result = 1;
+      var hi = input;
+      while(hi > 1){
+      	hi /= 10;
+        result *= 10;
+      }
+      var scale = result/10;
+      return Math.floor(input / scale + 1 ) * scale;
     }
     /*end of function set*/
 
