@@ -19,7 +19,9 @@ miniChart Object = {
   "frameFillStyle":  "rgba(0,0,0,0.8)",
 	"max":true/false,   //mark the maximum value
 	"min":true/false,   //mark the minimum value
+
   "labels":[label1..label10], //mark label of each value, respectively
+  "labelsFont":"15px Calibri",
   "labelStyle":"rgba(170,170,170,0.8)",
 
 	"data":[
@@ -162,12 +164,15 @@ miniChart Object = {
 
       /*draw labels*/
       var labelX = 0;
-      var num = Math.ceil(barMove/6) ;
-      chart.font = "20px Calibri";
+      var fp = Math.round(parseInt(object.labelsFont) *0.6); //font pixer, 0.6 is the scale of convert px to pixer
+      var num = Math.round(barMove/fp); //how many chars can be put in the place,
+      chart.font = object.labelsFont;
       chart.fillStyle = object.labelStyle;
       for(index in object.labels){
-          var txt = (object.labels[index].length > num)? object.labels[index].substring(0,num-1)+"..":object.labels[index];
-          chart.fillText(txt, labelX + barX + Math.ceil(barLen*0.9) ,space+hei+18);
+          var txtLen = object.labels[index].length;
+          var txtMove = (barMove - barLen*0.8 > txtLen * fp)?Math.ceil((barMove - txtLen * fp - barLen*0.9) / 2): 0;
+          var txt = (txtLen > num)? object.labels[index].substring(0,num-1)+"..":object.labels[index];
+          chart.fillText(txt, txtMove + labelX + barX + Math.ceil(barLen*0.9) ,space+hei+18);
           labelX += barMove;
       }
       chart.fill;
