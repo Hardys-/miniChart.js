@@ -19,6 +19,8 @@ miniChart Object = {
   "frameFillStyle":  "rgba(0,0,0,0.8)",
 	"max":true/false,   //mark the maximum value
 	"min":true/false,   //mark the minimum value
+  "labels":[label1..label10], //mark label of each value, respectively
+  "labelStyle":"rgba(170,170,170,0.8)",
 
 	"data":[
 		{ "title": titleOne,
@@ -46,6 +48,7 @@ miniChart Object = {
         canvas,
         topic,
         init,
+        max,min,
         chart;
 
 		//set method
@@ -54,6 +57,8 @@ miniChart Object = {
 				object = _object;
         canvas = _object.canvas;
         chart = _object.canvas.getContext("2d");
+        min = findMin(object.data);
+        max = findMax(object.data);
         return this;
     };
 
@@ -90,9 +95,9 @@ miniChart Object = {
     /*begin of a set of functions*/
     function drawFrame(lineStyle,title,frame,fillStyle){ //hor: # of hor lines; ver: # of ver lines.
       /*Relative value for diff resolution*/
-    	len = Math.ceil(canvas.width * 0.85);
-    	hei = Math.ceil(canvas.height * 0.85);
-      space = Math.ceil(canvas.width * 0.06);
+    	len = Math.ceil(canvas.width * 0.8);
+    	hei = Math.ceil(canvas.height * 0.8);
+      space = Math.ceil(canvas.width * 0.08);
       hor = (typeof lineStyle === "undefined")? 0 : lineStyle[0];
       ver = (typeof lineStyle === "undefined")? 0 : lineStyle[1];
     	/*Draw frame*/
@@ -135,14 +140,17 @@ miniChart Object = {
         chart.fillText(object.title[0],titleX,space+25);
         chart.fill;
       }
+
     }
 
     function barChart(data){
-      var	len = Math.ceil(canvas.width * 0.85);
+      var	len = Math.ceil(canvas.width * 0.8);
       var barLen = (data[0].values !== "undifined")? Math.ceil(len / (data[0].values.length* data.length*1.5)):0; // 0.5 for
       var barMove = Math.ceil(barLen * data.length *0.8 *1.5 + barLen*0.2);
-      var barY = Math.ceil(canvas.width * 0.06)+Math.ceil(canvas.height * 0.85)-object.frameStyle[1]; //start Y pos
-      var barX = Math.ceil(canvas.width * 0.06)+object.frameStyle[1]; //start X pos
+      var barY = Math.ceil(canvas.width * 0.08)+Math.ceil(canvas.height * 0.8)-object.frameStyle[1]; //start Y pos
+      var barX = Math.ceil(canvas.width * 0.08)+object.frameStyle[1]; //start X pos
+      var scale = hei - 25
+      /*draw bars*/
       for(i = 0; i < data.length ; i ++){
           chart.fillStyle = data[i].color;
           for(j = 0; j < data[i].values.length; j++){
@@ -151,6 +159,37 @@ miniChart Object = {
           }
           chart.fill;
       }
+
+      /*draw labels*/
+      var labelX = 0;
+      chart.font = "20px Calibri";
+      chart.fillStyle = object.labelStyle;
+      for(index in object.labels){
+          var txt = (object.labels[index].length > 5)? object.labels[index].substring(0,4)+"..":object.labels[index];
+          chart.fillText(txt, labelX + barX + Math.ceil(barLen*0.9) ,space+hei+18);
+          labelX += barMove;
+      }
+      chart.fill;
+    }
+
+    function findMax(list){
+        var ori = list[0].values[0];
+        for(i = 0 ; i < list.length; i++){
+            for( j = 0; j < list[i].values.length; j++){
+              if(list[i].values[j] > ori) ori = list[i].values[j];
+            }
+        }
+        return ori;
+    }
+
+    function findMin(list){
+      var ori = list[0].values[0];
+      for(i = 0 ; i < list.length; i++){
+          for( j = 0; j < list[i].values.length; j++){
+            if(list[i].values[j] < ori) ori = list[i].values[j];
+          }
+      }
+      return ori;
     }
     /*end of function set*/
 
