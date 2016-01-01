@@ -162,10 +162,11 @@ miniChart Object = {
 
       /*draw labels*/
       var labelX = 0;
+      var num = Math.ceil(barMove/6) ;
       chart.font = "20px Calibri";
       chart.fillStyle = object.labelStyle;
       for(index in object.labels){
-          var txt = (object.labels[index].length > 5)? object.labels[index].substring(0,4)+"..":object.labels[index];
+          var txt = (object.labels[index].length > num)? object.labels[index].substring(0,num-1)+"..":object.labels[index];
           chart.fillText(txt, labelX + barX + Math.ceil(barLen*0.9) ,space+hei+18);
           labelX += barMove;
       }
