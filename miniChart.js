@@ -56,7 +56,7 @@ miniChart Object = {
 		//set method
 		methods.setObject = function(_object) {
         // Set the property & value
-				object = _object;
+				object = format(_object);
         canvas = _object.canvas;
         chart = _object.canvas.getContext("2d");
         MIN = findMin(object.data);
@@ -102,9 +102,9 @@ miniChart Object = {
     	len = Math.ceil(canvas.width * 0.8);
     	hei = Math.ceil(canvas.height * 0.8);
       space = Math.ceil(canvas.width * 0.08);
-      ver = (typeof lineStyle === "undefined")? 0 : lineStyle[1];
+      ver = lineStyle[1];
     	/*Draw frame*/
-      chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
+      chart.fillStyle = fillStyle;
       chart.fillRect(space, space, len, hei);
       chart.fill();
       if (frame[0] == "frame"){
@@ -116,7 +116,7 @@ miniChart Object = {
       }
 
     	/*Draw Ver line*/
-    	chart.strokeStyle = (typeof lineStyle === "undefined")? "rgba(163,212,214,0.6)":lineStyle[3];
+    	chart.strokeStyle = lineStyle[3];
     	chart.lineWidth=2;
     	chart.beginPath();
     	for(i = 1; i < ver; i++){
@@ -128,17 +128,17 @@ miniChart Object = {
     	/*Draw Hor line & label*/
       var chartTop = findTop(MAX);
       var chartBom = (MIN > 0)? 0: MIN;
-      var grids = (typeof lineStyle === "undefined" )? 4 : lineStyle[0];//default value
+      var grids = lineStyle[0];//default value
 
       chart.font = "10px Calibri";
       chart.fillStyle ="#373838";
-      chart.strokeStyle = (typeof lineStyle === "undefined")? "rgba(70,70,70,0.2)":lineStyle[2];
+      chart.strokeStyle = lineStyle[2];
       chart.lineWidth = 1;
       chart.beginPath();
       for(i = 0; i <= grids  ; i++){
         var txt = (i*((chartTop-chartBom)/ grids)+chartBom).toFixed(2);
         chart.fillText(txt, 5, hei+space - i*(hei-30)/grids - frame[1] + 2);
-        if(lineStyle !=="undifined" && lineStyle[4] && i>0){
+        if(lineStyle[4] && i>0){
           chart.moveTo(space+frame[1],Math.round(hei+space - i*(hei-30)/grids - frame[1]));
           chart.lineTo(space-frame[1]+len,Math.round(hei+space - i*(hei-30)/grids - frame[1]));
         }
@@ -146,16 +146,12 @@ miniChart Object = {
     	chart.stroke();
 
       //char title
-      if(typeof object.title != "undefined"){
-        var fp = (isNaN(parseInt(object.title[1])))?6:Math.round(parseInt(object.title[1]) *0.3);//default font size is 20px
-        var titleX = Math.round(canvas.width/2)-object.title[0].length*fp;
-        chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
-        chart.font=object.title[1];
-        chart.fillText(object.title[0],titleX,space+22);
-        chart.fill;
-      }
-
-
+      var fp = (isNaN(parseInt(object.title[1])))?6:Math.round(parseInt(object.title[1]) *0.3);//default font size is 20px
+      var titleX = Math.round(canvas.width/2)-object.title[0].length*fp;
+      chart.fillStyle = fillStyle;
+      chart.font=object.title[1];
+      chart.fillText(object.title[0],titleX,space+22);
+      chart.fill;
     }
 
     function barChart(data){
@@ -209,6 +205,51 @@ miniChart Object = {
           labelX += barMove;
       }
       chart.fill;
+    }
+
+    function format(obj){
+      var rslt = { //default values
+        "animattion": true,
+        "chartType": "bar",
+        "feedback":true,    //interactive when mouse on
+        "title":["","20 Calibri"],
+        "lines":[4,0,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)",false,false],
+        "frameStyle":["line", 2],
+        "frameFillStyle":  "rgba(171,171,171,0.8)",
+        "max":true,   //mark the maximum value
+        "min":true,   //mark the minimum value
+        "labels":[],  //mark label of each value, respectively
+        "labelsFont":"15px Calibri",
+        "labelStyle":"rgba(64,64,64,0.8)",
+        "data":[]
+      };
+
+      if(typeof obj.animation !== "undefined") rslt.animation = obj.animation;
+      if(typeof obj.chartType !== "undefined") rslt.chartType = obj.chartType;
+      if(typeof obj.feedback !== "undefined") rslt.feedback = obj.feedback;
+      if(typeof obj.title !== "undefined") rslt.title = obj.title;
+      if(typeof obj.lines !== "undefined") rslt.lines = obj.lines;
+      if(typeof obj.frameStyle !== "undefined") rslt.frameStyle = obj.frameStyle;
+      if(typeof obj.frameFillStyle !== "undefined") rslt.frameFillStyle = obj.frameFillStyle;
+      if(typeof obj.max !== "undefined") rslt.max = obj.max;
+      if(typeof obj.min !== "undefined") rslt.min = obj.min;
+
+      if(typeof obj.labels !== "undefined") {
+        rslt.labels = obj.labels;
+      }else{
+        var labelsArray = [];
+        if(typeof obj.data[0].values !=='undefined'){                                  //check if the values exists
+          for(i = 0 ; i < obj.data[0].values.length; i++){
+            labelsArray.push("data"+(i+1));
+          }
+        }
+        rslt.labels = labelsArray;
+      }
+
+      if(typeof obj.labelsFont !== "undefined") rslt.labelsFont = obj.labelsFont;
+      if(typeof obj.labelStyle !== "undefined") rslt.labelStyle = obj.labelStyle;
+      if(typeof obj.data !== "undefined") rslt.data = obj.data;
+      return rslt;
     }
 
     function lineChart(data){}
