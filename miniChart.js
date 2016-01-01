@@ -128,7 +128,7 @@ miniChart Object = {
     	/*Draw Hor line & label*/
       var chartTop = findTop(MAX);
       var chartBom = (MIN > 0)? 0: MIN;
-      var grids = (typeof lineStyle === "undefined" || lineStyle[0] == 0 )? 4 : lineStyle[0];//default value
+      var grids = (typeof lineStyle === "undefined" )? 4 : lineStyle[0];//default value
 
       chart.font = "10px Calibri";
       chart.fillStyle ="#373838";
