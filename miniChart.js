@@ -15,7 +15,7 @@ miniChart Object = {
   "feedback":true,    //interactive when mouse on
 	"title": ["title of the chart","title font"],
   "lines":[15,15,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)"],
-  "frameStyle":["line  / frame", width],
+  "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
 	"max":true/false,   //mark the maximum value
 	"min":true/false,   //mark the minimum value
@@ -101,6 +101,8 @@ miniChart Object = {
       chart.fill();
       if (frame[0] == "frame"){
       	chart.clearRect(space+frame[1],space+frame[1],len-frame[1]*2,hei-frame[1]*2);
+      }else if(frame[0] == "none"){
+        chart.clearRect(0,0,canvas.width,canvas.height);
       }else{
         chart.clearRect(space+frame[1],space,len,hei-frame[1]);
       }
@@ -130,7 +132,7 @@ miniChart Object = {
         var titleX = Math.ceil(len/2)-object.title[0].length*5;
         chart.fillStyle = (typeof fillStyle !== "undefined")? fillStyle:"rgba(19,127,150,0.8)";
         chart.font=object.title[1];
-        chart.fillText(object.title[0],titleX,space+15);
+        chart.fillText(object.title[0],titleX,space+25);
         chart.fill;
       }
     }
