@@ -47,11 +47,10 @@ miniChart Object = {
 (function(window) {
     var methods = {},
 				object,
-        canvas,
-        topic,
+        canvas,topic,chart,                                                     //canvas properties
         init,
-        MAX,MIN,AVE,
-        chart;
+        MAX,MIN,AVE,                                                            //data properties
+        len,hei,space;                                                          //chart properties
 
 		//set method
 		methods.setObject = function(_object) {
@@ -61,6 +60,9 @@ miniChart Object = {
         chart = _object.canvas.getContext("2d");
         MIN = findMin(object.data);
         MAX = findMax(object.data);
+        len = Math.ceil(canvas.width * 0.8);
+        hei = Math.ceil(canvas.height * 0.8);
+        space = Math.ceil(canvas.width * 0.08);
         return this;
     };
 
@@ -99,9 +101,6 @@ miniChart Object = {
     /*begin of a set of functions*/
     function drawFrame(lineStyle,title,frame,fillStyle){ //hor: # of hor lines; ver: # of ver lines.
       /*Relative value for diff resolution*/
-    	len = Math.ceil(canvas.width * 0.8);
-    	hei = Math.ceil(canvas.height * 0.8);
-      space = Math.ceil(canvas.width * 0.08);
       ver = lineStyle[1];
     	/*Draw frame*/
       chart.fillStyle = fillStyle;
@@ -154,9 +153,41 @@ miniChart Object = {
       chart.fill;
     }
 
+    function drawTag(posX,posY,tagValue){
+      posX +=15;
+      posY -=18;
+
+      /*Draw the point*/
+      chart.strokeStyle = object.frameFillStyle;
+      chart.beginPath();
+      chart.moveTo(posX-15,posY+18);
+      chart.lineTo(posX,posY);
+      chart.stroke();
+      chart.fillStyle = "rgba(19,110,135,1)";//"#137f96";
+      chart.beginPath();
+      chart.arc(posX, posY, 2, 0, 2 * Math.PI);
+      chart.fill();
+
+      /*Draw the tag*/
+      chart.beginPath();
+      chart.moveTo(posX+4,posY-4);
+      chart.lineTo(posX+10,posY-8);
+      chart.lineTo(posX+10,posY+8);
+      chart.lineTo(posX+4, posY+4);
+      chart.closePath();
+      chart.fill();
+      chart.fillStyle = "rgba(19,127,150,0.85)";
+      chart.beginPath();
+      chart.fillRect(posX+10, posY-8, Math.round(tagValue.toString().length*10), 16);
+      chart.fill();
+      /*Draw the text*/
+      chart.beginPath();
+      chart.font = "8px Calibri";
+      chart.fillStyle ="#ffffff";
+      chart.fillText(tagValue,posX+12,posY+3);
+    }
+
     function barChart(data){
-      var	len = Math.ceil(canvas.width * 0.8);
-      var hei = Math.ceil(canvas.height * 0.8);
       var barLen = (data[0].values !== "undifined")? Math.ceil(len / (data[0].values.length* data.length*1.5)):0; // 0.5 for
       var barMove = Math.ceil(barLen * data.length *0.8 *1.5 + barLen*0.2);
 
@@ -164,16 +195,19 @@ miniChart Object = {
       var chartBom = (MIN > 0)? 0: MIN;
       var scale = ((hei - 30)/(findTop(MAX) - chartBom )).toFixed(2);
       var barY = (MIN > 0)? chartBase : chartBase + Math.round(MIN*scale); //start Y pos
-      var barX = Math.ceil(canvas.width * 0.08)+object.frameStyle[1]; //start X pos
+      var chartX = Math.ceil(canvas.width * 0.08)+object.frameStyle[1]; //start X pos
 
       /*draw bars*/
       for(i = 0; i < data.length ; i ++){
-          chart.fillStyle = data[i].color;
           for(j = 0; j < data[i].values.length; j++){
-            var barHei = Math.ceil(scale*data[i].values[j]);
-            chart.fillRect(Math.ceil(barX+Math.ceil(barLen*0.9)+j*barMove+i*barLen*0.8),barY-barHei,barLen,barHei);
+            var barHei = Math.ceil(scale*data[i].values[j]);                   //set the height for the bar
+            var barX = Math.ceil(chartX+Math.ceil(barLen*0.9)+j*barMove+i*barLen*0.8);
+            if(object.max && data[i].values[j] == MAX ){drawTag(Math.round(barX+barLen/2),barY-barHei,MAX);}
+            if(object.max && data[i].values[j] == MIN){drawTag(Math.round(barX+barLen/2),barY-barHei,MIN);}
+            chart.fillStyle = data[i].color;                                     //set the color for current bar
+            chart.fillRect(barX,barY-barHei,barLen,barHei);
+            chart.fill;
           }
-          chart.fill;
       }
 
       /*offset*/
@@ -186,8 +220,8 @@ miniChart Object = {
         chart.strokeStyle = (typeof object.frameFillStyle !== "undefined")? object.frameFillStyle:"rgba(19,127,150,0.8)";
         chart.lineWidth = 1;
         chart.beginPath();
-        chart.moveTo(barX, barY);
-        chart.lineTo(barX+len - 20 , barY);
+        chart.moveTo(chartX, barY);
+        chart.lineTo(chartX+len - 20 , barY);
         chart.stroke();
       }
 
@@ -201,7 +235,7 @@ miniChart Object = {
           var txtLen = object.labels[index].length;
           var txtMove = (barMove - barLen*0.8 > txtLen * fp)?Math.ceil((barMove - txtLen * fp - barLen*0.9) / 2): 0;
           var txt = (txtLen > num)? object.labels[index].substring(0,num-1)+"..":object.labels[index];
-          chart.fillText(txt, txtMove + labelX + barX + Math.ceil(barLen*0.9) ,space+hei+18);
+          chart.fillText(txt, txtMove + labelX + chartX + Math.ceil(barLen*0.9) ,space+hei+18);
           labelX += barMove;
       }
       chart.fill;
