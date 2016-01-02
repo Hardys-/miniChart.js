@@ -53,9 +53,9 @@ miniChart Object = {
         init,imageData,
         MAX,MIN,AVE,                                                            //data properties
         len,hei,space,
-        maxTag, minTag;                                                          //chart properties
+        maxTag, minTag;                                                         //chart properties
 
-		//set method
+		// Set method
 		methods.setObject = function(_object) {
         // Set the property & value
 				object = format(_object);
@@ -70,7 +70,7 @@ miniChart Object = {
         return this;
     };
 
-    // draw the chart
+    // Draw the chart
     methods.go = function(){
 				drawFrame(object.lines,object.title,object.frameStyle,object.frameFillStyle);
         if (object.chartType == "bar") {
@@ -108,8 +108,8 @@ miniChart Object = {
     // Last-in-the-line exposure to the window, if it exists
     window.miniChart = init;
 
-
-    /*begin of a set of functions*/
+    /*Begin of a set of functions*/
+    //Draw the frame of the chart, 3 types: line, frame, none
     function drawFrame(lineStyle,title,frame,fillStyle){ //hor: # of hor lines; ver: # of ver lines.
       /*Relative value for diff resolution*/
       ver = lineStyle[1];
@@ -164,6 +164,7 @@ miniChart Object = {
       chart.fill;
     }
 
+    //Draw the interactive feedback when mouse on an object
     function drawMouseInfo(){//draw feedback info on Canvas
 
       function getMousePos(canvas, evt) { //return the mouse pos on canvas
@@ -239,6 +240,7 @@ miniChart Object = {
 
     }
 
+    //Draw the tags for max && min value
     function drawTag(posX,posY,tagValue){
       posX +=15;
       posY -=18;
@@ -273,6 +275,7 @@ miniChart Object = {
       chart.fillText(tagValue,posX+12,posY+3);
     }
 
+    //Draw bar chart
     function barChart(data){
       var barLen = (data[0].values !== "undifined")? Math.ceil(len / (data[0].values.length* data.length*1.5)):0; // 0.5 for
       var barMove = Math.ceil(barLen * data.length *0.8 *1.5 + barLen*0.2);
@@ -330,6 +333,7 @@ miniChart Object = {
       chart.fill;
     }
 
+    //Format input object, complete missing values.
     function format(obj){
       var rslt = { //default values
         "animattion": true,
@@ -379,10 +383,13 @@ miniChart Object = {
       return rslt;
     }
 
+    //Draw line chart
     function lineChart(data){}
 
+    //Draw pie chart
     function pieChart(data){}
 
+    //find max values
     function findMax(list){
         var ori = list[0].values[0];
         var sum = 0, count = 0;
@@ -397,6 +404,7 @@ miniChart Object = {
         return ori;
     }
 
+    //find min value
     function findMin(list){
       var ori = list[0].values[0];
       for(i = 0 ; i < list.length; i++){
@@ -407,6 +415,7 @@ miniChart Object = {
       return ori;
     }
 
+    //Find the upper bound of a value: 184 -> 200, 34 -> 40
     function findTop(input){
     	var result = 1;
       var hi = input;
@@ -418,6 +427,7 @@ miniChart Object = {
       return Math.floor(input / scale + 1 ) * scale;
     }
 
+    //Change to a related dark color
     function colorChange(rgba){
       var r, g, b;
       var rgbaValue = rgba.substring(5, rgba.length - 1).split(",");
