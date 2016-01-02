@@ -19,6 +19,7 @@ miniChart Object = {
   "frameFillStyle":  "rgba(0,0,0,0.8)",
 	"max":true/false,   //mark the maximum value
 	"min":true/false,   //mark the minimum value
+  "tagFillStyle":"rgba(19,127,150,0.85)",
 
   "labels":[label1..label10], //mark label of each value, respectively
   "labelsFont":"15px Calibri",
@@ -163,7 +164,12 @@ miniChart Object = {
       chart.moveTo(posX-15,posY+18);
       chart.lineTo(posX,posY);
       chart.stroke();
-      chart.fillStyle = "rgba(19,110,135,1)";//"#137f96";
+      var r, g, b;
+      var rgbaValue = object.tagFillStyle.substring(5, object.tagFillStyle.length - 1).split(",");
+      r = rgbaValue[0];
+      g = (rgbaValue[1]> 15)? rgbaValue[1] - 15 : 0;
+      b = (rgbaValue[2]> 15)? rgbaValue[2] - 15 : 0;
+      chart.fillStyle = "rgba("+r+","+g+","+b+",0.9)";
       chart.beginPath();
       chart.arc(posX, posY, 2, 0, 2 * Math.PI);
       chart.fill();
@@ -176,9 +182,9 @@ miniChart Object = {
       chart.lineTo(posX+4, posY+4);
       chart.closePath();
       chart.fill();
-      chart.fillStyle = "rgba(19,127,150,0.85)";
+      chart.fillStyle = object.tagFillStyle;
       chart.beginPath();
-      chart.fillRect(posX+10, posY-8, Math.round(tagValue.toString().length*10), 16);
+      chart.fillRect(posX+10, posY-8, Math.round(tagValue.toString().length*8+5), 16);
       chart.fill();
       /*Draw the text*/
       chart.beginPath();
@@ -252,6 +258,7 @@ miniChart Object = {
         "frameFillStyle":  "rgba(171,171,171,0.8)",
         "max":true,   //mark the maximum value
         "min":true,   //mark the minimum value
+        "tagFillStyle":"rgba(19,127,150,0.85)",
         "labels":[],  //mark label of each value, respectively
         "labelsFont":"15px Calibri",
         "labelStyle":"rgba(64,64,64,0.8)",
@@ -267,6 +274,7 @@ miniChart Object = {
       if(typeof obj.frameFillStyle !== "undefined") rslt.frameFillStyle = obj.frameFillStyle;
       if(typeof obj.max !== "undefined") rslt.max = obj.max;
       if(typeof obj.min !== "undefined") rslt.min = obj.min;
+      if(typeof obj.tagFillStyle !== "undefined") rslt.tagFillStyle = obj.tagFillStyle;
 
       if(typeof obj.labels !== "undefined") {
         rslt.labels = obj.labels;
