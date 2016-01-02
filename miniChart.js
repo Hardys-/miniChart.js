@@ -75,7 +75,7 @@ miniChart Object = {
         else if (object.chartType == "line") { lineChart(object.data);}
         else if (object.chartType == "pie") { pieChart(object.data);};
 
-        if(object.feedback){drawMouseInfo();alert("object.feedback: "+object.feedback);}
+        if(object.feedback){drawMouseInfo();}
 		}
 
     // Init method setting the topic and returning the methods.
@@ -185,9 +185,10 @@ miniChart Object = {
             if((posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)){//found the target
               chart.fillStyle= colorChange(chartObjects[i].fillStyle);
               chart.beginPath();
-              chart.fillRect(x1-2,y1-2,x2+4,y2+4);
-              chart.clearRect(x1,y1,x2,y2);
-              chart.fill();
+              //try jquey to build a shadow.
+              //chart.fillRect(x1-2,y1-2,x2+4,y2+4);
+            //  chart.clearRect(x1,y1,x2,y2);
+              //chart.fill();
               chart.fillStyle= chartObjects[i].fillStyle;
               chart.fillRect(x1,y1,x2,y2);
               chart.fill();
@@ -198,8 +199,6 @@ miniChart Object = {
         }else if(object.chartType == "pie"){
 
         }
-
-
         /*
           if(Math.abs(Gmsg[i].temp[X-1+(20-time)] - tempValue) * Math.ceil(hei/(tempHigh-tempLow)) < 2 ) {
             var tempComp = " + 0.00";
