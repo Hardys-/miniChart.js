@@ -56,7 +56,7 @@ miniChart Object = {
         maxTag, minTag, infoFlag;                                               //chart properties
 
     //For missing color or default color
-    var colorSet=[];
+    var colorSet=["rgba(254,97,97,0.8)","rgba(56,86,156,0.8)","rgba(29,175,153,0.8)","rgba(88,174,254,0.8)","rgba(252,183,19,0.8)",];
 		// Set method
 		methods.setObject = function(_object) {
         // Set the property & value
@@ -77,6 +77,7 @@ miniChart Object = {
 				drawFrame(object.lines,object.title,object.frameStyle,object.frameFillStyle);
         if (object.chartType == "bar") {
           barChart(object.data);
+          drawLegend(object.data);
         }
         else if (object.chartType == "line") { lineChart(object.data);}
         else if (object.chartType == "pie") { pieChart(object.data);};
@@ -167,6 +168,27 @@ miniChart Object = {
       chart.font=object.title[1];
       chart.fillText(object.title[0],titleX,space+22);
       chart.fill;
+    }
+
+    function drawLegend(data){
+      //Default font size is "15px Calibri",
+      var txtLen = data[0].title.length * 9; //0.6 of the font size typically is pixel number
+      var posX = canvas.width - txtLen - 10, //10 offset from right edge
+      posY = space;
+
+      for(i = 0 ; i < data.length; i++){
+          //Draw color square
+          chart.font = "15px Calibri";
+          chart.fillStyle = data[i].color;
+          chart.fillRect(posX-15,posY+i*15+3,12,-12);
+          chart.fill();
+          //Darw txt
+          var legendTxt = (data[i].title.length*9 > txtLen+18)? data[i].title.substring(0,Math.round(txtLen/9))+"..":data[i].title;
+          chart.fillStyle = object.frameFillStyle;
+          chart.fillText(legendTxt,posX,posY+i*15+3);
+          chart.fill();
+      }
+
     }
 
     //Draw the interactive feedback when mouse on an object
