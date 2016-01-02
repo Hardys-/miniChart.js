@@ -51,10 +51,12 @@ miniChart Object = {
 				object,chartObjects,
         canvas,topic,chart,                                                     //canvas properties
         init,imageData,
-        MAX,MIN,AVE,                                                            //data properties
+        MAX,MIN,AVE = [],                                                       //data properties, Ave: array of aves of each set of data
         len,hei,space,
-        maxTag, minTag;                                                         //chart properties
+        maxTag, minTag, infoFlag;                                               //chart properties
 
+    //For missing color or default color
+    var colorSet=[];
 		// Set method
 		methods.setObject = function(_object) {
         // Set the property & value
@@ -79,10 +81,13 @@ miniChart Object = {
         else if (object.chartType == "line") { lineChart(object.data);}
         else if (object.chartType == "pie") { pieChart(object.data);};
 
+        //Draw tags after the chart is fully complete
         if(object.max && maxTag.length != 0) {drawTag(maxTag[0],maxTag[1],maxTag[2]);}
         if(object.min && minTag.length != 0) {drawTag(minTag[0],minTag[1],minTag[2]);}
+        //save the current image
         imageData = chart.getImageData(0, 0,canvas.width,canvas.height);
-        if(object.feedback){drawMouseInfo();}
+        //If feedback needed, start mouse event listener and initialize infoFlag
+        if(object.feedback){drawMouseInfo(); infoFlag = false;}
 		}
 
     // Init method setting the topic and returning the methods.
@@ -181,7 +186,6 @@ miniChart Object = {
       }, false);
 
       function searchPrint(posX,posY){// given the position of mouse and search the data
-        //$("#mouseInfoTag").css({"display":"none"});
         if(object.chartType == "bar"){
           var edge = Math.round(chartObjects[0].pos[2]*0.2);  //for calculate the overlapped bar
           for( i = 0; i < chartObjects.length; i++){
@@ -190,7 +194,8 @@ miniChart Object = {
             var y1 = chartObjects[i].pos[1];
             var y2 = chartObjects[i].pos[3]; //hei
 
-            if( (posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)){//found the target
+            //found the target object
+            if( (posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)){
               chart.fillStyle= colorChange(chartObjects[i].fillStyle);
               chart.beginPath();
               chart.fillRect(x1-2,y1-2,x2+4,y2+4);
@@ -199,43 +204,26 @@ miniChart Object = {
               chart.fillStyle= chartObjects[i].fillStyle;
               chart.fillRect(x1,y1,x2,y2);
               chart.fill();
-              break;
-            }else if(i == chartObjects.length-1){chart.putImageData(imageData, 0, 0);}
-          }
 
+              //Draw info tag if it is not exist
+              if (!infoFlag){
+                drawInfoTag(posX,posY,chartObjects[i]);
+                infoFlag = true;
+              }
+              break;
+            }else if(i == chartObjects.length-1){
+              //Restore chart
+              chart.putImageData(imageData, 0, 0);
+              //Remove info tag
+              infoFlag = false;
+            }
+          }
         }else if(object.chartType == "line"){
 
         }else if(object.chartType == "pie"){
 
         }
-        /*
-          if(Math.abs(Gmsg[i].temp[X-1+(20-time)] - tempValue) * Math.ceil(hei/(tempHigh-tempLow)) < 2 ) {
-            var tempComp = " + 0.00";
-            var tempClass = "tempClass1";
-            var diff = Gmsg[i].temp[X-1+(20-time)] - ave[X-1+(20-time)][0]/ave[X-1+(20-time)][1];
-            var d = new Date(Gmsg[i].startTime);
-            var curTime = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
-            if(diff > 0){tempComp = " +"+ diff.toFixed(2)+"&#8593";}
-            else{tempComp = " "+ diff.toFixed(2)+"&#8595"; tempClass = "tempClass2"}
-            var mouseInfo = "<p class = \"infoId\">ID: "+Gmsg[i].id +"</p><p>Temp.: "+Gmsg[i].temp[X-1+(20-time)]+
-                            "*C </p><p>Start at: "+ curTime +"</p><p class = \""+tempClass+"\">Ave. "+ tempComp +"</p>"
-            $("#mouseInfoTag").html(mouseInfo);
-            var rect = canvas.getBoundingClientRect();
-            var x = mousePos.x + rect.left - 35;
-            var y = mousePos.y + rect.top + 10; //10 pixer offset
-            $("#mouseInfoTag").css({"left":x,"top":y,"display":"block"});
-            chart.fillStyle= "#ffffff"//.replace("0.8", "0.3"); lighter color
-            chart.beginPath();
-            chart.arc(Math.ceil((X-1+0.5)*len/time+46),(tempHigh - Gmsg[i].temp[X-1+(20-time)])*(hei/(tempHigh-tempLow))+44,7,0,2*Math.PI);
-            chart.fill();
-            chart.fillStyle= Gmsg[i].rgba//.replace("0.8", "0.3"); lighter color
-            chart.beginPath();
-            chart.arc(Math.ceil((X-1+0.5)*len/time+46),(tempHigh - Gmsg[i].temp[X-1+(20-time)])*(hei/(tempHigh-tempLow))+44,5,0,2*Math.PI);
-            chart.fill();
-            chart.fillStyle= "#ffffff"//.replace("0.8", "0.3"); lighter color
-            chart.beginPath();
-            chart.arc(Math.ceil((X-1+0.5)*len/time+46),(tempHigh - Gmsg[i].temp[X-1+(20-time)])*(hei/(tempHigh-tempLow))+44,3,0,2*Math.PI);
-            chart.fill();*/
+
       }
 
     }
@@ -275,6 +263,47 @@ miniChart Object = {
       chart.fillText(tagValue,posX+12,posY+3);
     }
 
+    //Draw info tag
+    function drawInfoTag(posX,posY,Obj){
+      var fontSize = parseInt(object.feedbackStyle[0]);
+      //Max value for tag width, margin left 10px, margin right 10px;
+      var tagWidth = 20 + Math.max(Math.round(fontSize*0.6*Obj.name.toString().length),Math.round(fontSize*0.6*Obj.value.toString().length),Math.round(fontSize*0.6*(AVE[parseInt(Obj.setNumber)].toString().length+5)));
+      //3 lines of info(name, value, ave),Margin top 15px, margin bottom 15 px
+      var tagHeight = 40 + Math.round(fontSize*0.8*4);
+      //Default offset 20px to the left
+      var tagX = (posX+10+tagWidth > canvas.width)?posX-10-tagWidth:posX+10+tagWidth;
+      var tagY = (posY+10+tagHeight > canvas.height)?posY-10-tagHeight:posY+10+tagHeight;;
+      //Draw background
+      chart.fillStyle = object.feedbackStyle[2];
+      chart.fillRect(tagX,tagY,tagWidth,tagHeight);
+      chart.fill();
+      //Draw name
+      chart.font = object.feedbackStyle[0];
+      chart.fillStyle = object.feedbackStyle[1];  //font color
+      chart.fillText(Obj.name,tagX+10,tagY+20);   //margin-left 10px
+      chart.fill();
+      //Draw Ave info*/
+      chart.fillText("Ave.:"+AVE[parseInt(Obj.setNumber)],tagX+10,tagY + 23 + Math.round(fontSize*0.8));     //margin-left 10px
+      chart.fill();
+      chart.save();
+      //Draw color square
+      chart.fillStyle = Obj.fillStyle;
+      chart.fillRect(tagX+10,tagY + 26 + Math.round(fontSize*0.8*2),Math.round(fontSize*0.6),-1*Math.round(fontSize*0.6));
+      chart.fill();
+      chart.restore();
+      //Fill value text
+      chart.fillText(Obj.value,tagX+10+Math.round(fontSize*0.6)+3,tagY + 26 + Math.round(fontSize*0.8*2));   //margin-left 10px
+      chart.fill();
+      //Compare to the ave value, set the color
+      var diff = (AVE[parseInt(Obj.setNumber)] - Obj.value).toFixed(2);
+      chart.fillStyle = (diff < 0)?"rgba(254,97,97,0.8)":"rgba(88,174,254,0.8)";
+      var extString = (diff < 0)?"++":"--";
+      if(diff == 0) extString ="==";
+      chart.fillText(Math.abs(diff)+extString,tagX+10,tagY + 32 + Math.round(fontSize*0.8*3));
+      chart.fill();
+
+    }
+
     //Draw bar chart
     function barChart(data){
       var barLen = (data[0].values !== "undifined")? Math.ceil(len / (data[0].values.length* data.length*1.5)):0; // 0.5 for
@@ -297,7 +326,7 @@ miniChart Object = {
             chart.fillStyle = data[i].color;                                     //set the color for current bar
             chart.fillRect(barX,barY-barHei,barLen,barHei);
             chart.fill;
-            var obj = {"pos":[barX,barY-barHei,barLen,barHei],"name":object.labels[i],"value":data[i].values[j],"fillStyle": data[i].color};
+            var obj = {"pos":[barX,barY-barHei,barLen,barHei],"name":data[i].title,"value":data[i].values[j],"fillStyle": data[i].color,"setNumber":i};
             chartObjects.push(obj);
           };
       };
@@ -339,7 +368,7 @@ miniChart Object = {
         "animattion": true,
         "chartType": "bar",
         "feedback":true,    //interactive when mouseOn an object
-        "feedbackStyle":["15px Calibri","rgba(255,255,255,1)","rgba(110,110,110,1)"],
+        "feedbackStyle":["15px Calibri","rgba(255,255,255,1)","rgba(110,110,110,0.8)"],
         "title":["","20 Calibri"],
         "lines":[4,0,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)",false,false],
         "frameStyle":["line", 2],
@@ -392,15 +421,17 @@ miniChart Object = {
     //find max values
     function findMax(list){
         var ori = list[0].values[0];
-        var sum = 0, count = 0;
         for(i = 0 ; i < list.length; i++){
+            var sum = 0, count = 0;
             for( j = 0; j < list[i].values.length; j++){
               count++;
               sum += list[i].values[j];
               if(list[i].values[j] > ori) ori = list[i].values[j];
             }
+            // ave for set of values
+            AVE.push((sum/count).toFixed(2));
         }
-        AVE = (sum/count).toFixed(2);
+
         return ori;
     }
 
