@@ -1,6 +1,5 @@
-1. Structure
-2. Bar, Pie, Line,
-3. Customized 
-4. simple and difault vaule support
-5. color generator
-6. add legend
+1. Bar, Pie, Line chart
+2. simple and difault vaule support
+3. color generator
+4. add legend
+5. default color for data.values
