@@ -13,8 +13,9 @@ miniChart Object = {
   "canvas": canvas Object,
   "chartType": pie/line/bar,
   "feedback":true,    //interactive when mouse on
+  "feedbackStyle":[font,fontColor,fillStyle],
 	"title": ["title of the chart","title font"],
-  "lines":[15,15,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)",true/false, true/false],
+  "lines":[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
   "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
 	"max":true/false,   //mark the maximum value
@@ -49,9 +50,10 @@ miniChart Object = {
     var methods = {},
 				object,chartObjects,
         canvas,topic,chart,                                                     //canvas properties
-        init,
+        init,imageData,
         MAX,MIN,AVE,                                                            //data properties
-        len,hei,space;                                                          //chart properties
+        len,hei,space,
+        maxTag, minTag;                                                          //chart properties
 
 		//set method
 		methods.setObject = function(_object) {
@@ -64,17 +66,22 @@ miniChart Object = {
         len = Math.ceil(canvas.width * 0.8);
         hei = Math.ceil(canvas.height * 0.8);
         space = Math.ceil(canvas.width * 0.08);
-        loadJquery();
+        imageData = chart.getImageData(0, 0,canvas.width,canvas.height);
         return this;
     };
 
     // draw the chart
     methods.go = function(){
 				drawFrame(object.lines,object.title,object.frameStyle,object.frameFillStyle);
-        if (object.chartType == "bar") {barChart(object.data);}
+        if (object.chartType == "bar") {
+          barChart(object.data);
+        }
         else if (object.chartType == "line") { lineChart(object.data);}
         else if (object.chartType == "pie") { pieChart(object.data);};
 
+        if(object.max && maxTag.length != 0) {drawTag(maxTag[0],maxTag[1],maxTag[2]);}
+        if(object.min && minTag.length != 0) {drawTag(minTag[0],minTag[1],minTag[2]);}
+        imageData = chart.getImageData(0, 0,canvas.width,canvas.height);
         if(object.feedback){drawMouseInfo();}
 		}
 
@@ -120,7 +127,7 @@ miniChart Object = {
 
     	/*Draw Ver line*/
     	chart.strokeStyle = lineStyle[3];
-    	chart.lineWidth=2;
+    	chart.lineWidth=1;
     	chart.beginPath();
     	for(i = 1; i < ver; i++){
     		chart.moveTo(i*len/ver+space-1,space+frame[1]+26);
@@ -174,7 +181,6 @@ miniChart Object = {
 
       function searchPrint(posX,posY){// given the position of mouse and search the data
         //$("#mouseInfoTag").css({"display":"none"});
-
         if(object.chartType == "bar"){
           var edge = Math.round(chartObjects[0].pos[2]*0.2);  //for calculate the overlapped bar
           for( i = 0; i < chartObjects.length; i++){
@@ -182,18 +188,20 @@ miniChart Object = {
             var x2 = chartObjects[i].pos[2]; //len
             var y1 = chartObjects[i].pos[1];
             var y2 = chartObjects[i].pos[3]; //hei
-            if((posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)){//found the target
+
+            if( (posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)){//found the target
               chart.fillStyle= colorChange(chartObjects[i].fillStyle);
               chart.beginPath();
-              //try jquey to build a shadow.
-              //chart.fillRect(x1-2,y1-2,x2+4,y2+4);
-            //  chart.clearRect(x1,y1,x2,y2);
-              //chart.fill();
+              chart.fillRect(x1-2,y1-2,x2+4,y2+4);
+              chart.clearRect(x1,y1,x2,y2);
+              chart.fill();
               chart.fillStyle= chartObjects[i].fillStyle;
               chart.fillRect(x1,y1,x2,y2);
               chart.fill();
-            }
+              break;
+            }else if(i == chartObjects.length-1){chart.putImageData(imageData, 0, 0);}
           }
+
         }else if(object.chartType == "line"){
 
         }else if(object.chartType == "pie"){
@@ -281,8 +289,8 @@ miniChart Object = {
           for(j = 0; j < data[i].values.length; j++){
             var barHei = Math.round(scale*data[i].values[j]);                   //set the height for the bar
             var barX = Math.round(chartX+barLen*0.9+j*barMove+i*barLen*0.8);
-            if(object.max && data[i].values[j] == MAX ){drawTag(Math.round(barX+barLen/2),barY-barHei,MAX);}
-            if(object.max && data[i].values[j] == MIN){drawTag(Math.round(barX+barLen/2),barY-barHei,MIN);}
+            if(data[i].values[j] == MAX ){maxTag=[Math.round(barX+barLen/2),barY-barHei,MAX];}
+            if(data[i].values[j] == MIN ){minTag=[Math.round(barX+barLen/2),barY-barHei,MIN];}
             chart.fillStyle = data[i].color;                                     //set the color for current bar
             chart.fillRect(barX,barY-barHei,barLen,barHei);
             chart.fill;
@@ -326,7 +334,8 @@ miniChart Object = {
       var rslt = { //default values
         "animattion": true,
         "chartType": "bar",
-        "feedback":true,    //interactive when mouse on
+        "feedback":true,    //interactive when mouseOn an object
+        "feedbackStyle":["15px Calibri","rgba(255,255,255,1)","rgba(110,110,110,1)"],
         "title":["","20 Calibri"],
         "lines":[4,0,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)",false,false],
         "frameStyle":["line", 2],
@@ -334,7 +343,7 @@ miniChart Object = {
         "max":true,   //mark the maximum value
         "min":true,   //mark the minimum value
         "tagFillStyle":"rgba(101,101,101,0.85)",
-        "labels":[],  //mark label of each value, respectively
+        "labels":[],  //mark label of each bar, respectively
         "labelsFont":"15px Calibri",
         "labelStyle":"rgba(64,64,64,0.8)",
         "data":[]
@@ -343,6 +352,7 @@ miniChart Object = {
       if(typeof obj.animation !== "undefined") rslt.animation = obj.animation;
       if(typeof obj.chartType !== "undefined") rslt.chartType = obj.chartType;
       if(typeof obj.feedback !== "undefined") rslt.feedback = obj.feedback;
+      if(typeof obj.feedbackStyle !== "undefined") rslt.feedbackStyle = obj.feedbackStyle;
       if(typeof obj.title !== "undefined") rslt.title = obj.title;
       if(typeof obj.lines !== "undefined") rslt.lines = obj.lines;
       if(typeof obj.frameStyle !== "undefined") rslt.frameStyle = obj.frameStyle;
@@ -417,15 +427,6 @@ miniChart Object = {
       return "rgba("+r+","+g+","+b+",0.9)";
     }
 
-    function loadJquery(){  //load jquery if original user do not have
-      if(!window.jQuery)
-      {
-         var script = document.createElement('script');
-         script.type = "text/javascript";
-         script.src = "http://code.jquery.com/jquery-1.11.1.js";
-         document.getElementsByTagName('head')[0].appendChild(script);
-      }
-    }
     /*end of function set*/
 
 // This line either passes the `window` as an argument or
