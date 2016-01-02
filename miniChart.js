@@ -47,7 +47,7 @@ miniChart Object = {
 
 (function(window) {
     var methods = {},
-				object,
+				object,chartObjects,
         canvas,topic,chart,                                                     //canvas properties
         init,
         MAX,MIN,AVE,                                                            //data properties
@@ -64,6 +64,7 @@ miniChart Object = {
         len = Math.ceil(canvas.width * 0.8);
         hei = Math.ceil(canvas.height * 0.8);
         space = Math.ceil(canvas.width * 0.08);
+        loadJquery();
         return this;
     };
 
@@ -72,7 +73,9 @@ miniChart Object = {
 				drawFrame(object.lines,object.title,object.frameStyle,object.frameFillStyle);
         if (object.chartType == "bar") {barChart(object.data);}
         else if (object.chartType == "line") { lineChart(object.data);}
-        else if (object.chartType == "pie") { pieChart(object.data);}
+        else if (object.chartType == "pie") { pieChart(object.data);};
+
+        if(object.feedback){drawMouseInfo();alert("object.feedback: "+object.feedback);}
 		}
 
     // Init method setting the topic and returning the methods.
@@ -154,6 +157,81 @@ miniChart Object = {
       chart.fill;
     }
 
+    function drawMouseInfo(){//draw feedback info on Canvas
+
+      function getMousePos(canvas, evt) { //return the mouse pos on canvas
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+          };
+      };
+
+      canvas.addEventListener('mousemove', function(evt) {
+          var mousePos = getMousePos(canvas, evt);
+          searchPrint(mousePos.x,mousePos.y);
+      }, false);
+
+      function searchPrint(posX,posY){// given the position of mouse and search the data
+        //$("#mouseInfoTag").css({"display":"none"});
+
+        if(object.chartType == "bar"){
+          var edge = Math.round(chartObjects[0].pos[2]*0.2);  //for calculate the overlapped bar
+          for( i = 0; i < chartObjects.length; i++){
+            var x1 = chartObjects[i].pos[0];
+            var x2 = chartObjects[i].pos[2]; //len
+            var y1 = chartObjects[i].pos[1];
+            var y2 = chartObjects[i].pos[3]; //hei
+            if((posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)){//found the target
+              chart.fillStyle= colorChange(chartObjects[i].fillStyle);
+              chart.beginPath();
+              chart.fillRect(x1-2,y1-2,x2+4,y2+4);
+              chart.clearRect(x1,y1,x2,y2);
+              chart.fill();
+              chart.fillStyle= chartObjects[i].fillStyle;
+              chart.fillRect(x1,y1,x2,y2);
+              chart.fill();
+            }
+          }
+        }else if(object.chartType == "line"){
+
+        }else if(object.chartType == "pie"){
+
+        }
+
+
+        /*
+          if(Math.abs(Gmsg[i].temp[X-1+(20-time)] - tempValue) * Math.ceil(hei/(tempHigh-tempLow)) < 2 ) {
+            var tempComp = " + 0.00";
+            var tempClass = "tempClass1";
+            var diff = Gmsg[i].temp[X-1+(20-time)] - ave[X-1+(20-time)][0]/ave[X-1+(20-time)][1];
+            var d = new Date(Gmsg[i].startTime);
+            var curTime = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+            if(diff > 0){tempComp = " +"+ diff.toFixed(2)+"&#8593";}
+            else{tempComp = " "+ diff.toFixed(2)+"&#8595"; tempClass = "tempClass2"}
+            var mouseInfo = "<p class = \"infoId\">ID: "+Gmsg[i].id +"</p><p>Temp.: "+Gmsg[i].temp[X-1+(20-time)]+
+                            "*C </p><p>Start at: "+ curTime +"</p><p class = \""+tempClass+"\">Ave. "+ tempComp +"</p>"
+            $("#mouseInfoTag").html(mouseInfo);
+            var rect = canvas.getBoundingClientRect();
+            var x = mousePos.x + rect.left - 35;
+            var y = mousePos.y + rect.top + 10; //10 pixer offset
+            $("#mouseInfoTag").css({"left":x,"top":y,"display":"block"});
+            chart.fillStyle= "#ffffff"//.replace("0.8", "0.3"); lighter color
+            chart.beginPath();
+            chart.arc(Math.ceil((X-1+0.5)*len/time+46),(tempHigh - Gmsg[i].temp[X-1+(20-time)])*(hei/(tempHigh-tempLow))+44,7,0,2*Math.PI);
+            chart.fill();
+            chart.fillStyle= Gmsg[i].rgba//.replace("0.8", "0.3"); lighter color
+            chart.beginPath();
+            chart.arc(Math.ceil((X-1+0.5)*len/time+46),(tempHigh - Gmsg[i].temp[X-1+(20-time)])*(hei/(tempHigh-tempLow))+44,5,0,2*Math.PI);
+            chart.fill();
+            chart.fillStyle= "#ffffff"//.replace("0.8", "0.3"); lighter color
+            chart.beginPath();
+            chart.arc(Math.ceil((X-1+0.5)*len/time+46),(tempHigh - Gmsg[i].temp[X-1+(20-time)])*(hei/(tempHigh-tempLow))+44,3,0,2*Math.PI);
+            chart.fill();*/
+      }
+
+    }
+
     function drawTag(posX,posY,tagValue){
       posX +=15;
       posY -=18;
@@ -164,12 +242,7 @@ miniChart Object = {
       chart.moveTo(posX-15,posY+18);
       chart.lineTo(posX,posY);
       chart.stroke();
-      var r, g, b;
-      var rgbaValue = object.tagFillStyle.substring(5, object.tagFillStyle.length - 1).split(",");
-      r = rgbaValue[0];
-      g = (rgbaValue[1]> 15)? rgbaValue[1] - 15 : 0;
-      b = (rgbaValue[2]> 15)? rgbaValue[2] - 15 : 0;
-      chart.fillStyle = "rgba("+r+","+g+","+b+",0.9)";
+      chart.fillStyle = colorChange(object.tagFillStyle);
       chart.beginPath();
       chart.arc(posX, posY, 2, 0, 2 * Math.PI);
       chart.fill();
@@ -204,17 +277,20 @@ miniChart Object = {
       var chartX = Math.ceil(canvas.width * 0.08)+object.frameStyle[1]; //start X pos
 
       /*draw bars*/
+      chartObjects = []; //initialization
       for(i = 0; i < data.length ; i ++){
           for(j = 0; j < data[i].values.length; j++){
-            var barHei = Math.ceil(scale*data[i].values[j]);                   //set the height for the bar
-            var barX = Math.ceil(chartX+Math.ceil(barLen*0.9)+j*barMove+i*barLen*0.8);
+            var barHei = Math.round(scale*data[i].values[j]);                   //set the height for the bar
+            var barX = Math.round(chartX+barLen*0.9+j*barMove+i*barLen*0.8);
             if(object.max && data[i].values[j] == MAX ){drawTag(Math.round(barX+barLen/2),barY-barHei,MAX);}
             if(object.max && data[i].values[j] == MIN){drawTag(Math.round(barX+barLen/2),barY-barHei,MIN);}
             chart.fillStyle = data[i].color;                                     //set the color for current bar
             chart.fillRect(barX,barY-barHei,barLen,barHei);
             chart.fill;
-          }
-      }
+            var obj = {"pos":[barX,barY-barHei,barLen,barHei],"name":object.labels[i],"value":data[i].values[j],"fillStyle": data[i].color};
+            chartObjects.push(obj);
+          };
+      };
 
       /*offset*/
       if(MIN < 0){
@@ -258,7 +334,7 @@ miniChart Object = {
         "frameFillStyle":  "rgba(171,171,171,0.8)",
         "max":true,   //mark the maximum value
         "min":true,   //mark the minimum value
-        "tagFillStyle":"rgba(19,127,150,0.85)",
+        "tagFillStyle":"rgba(101,101,101,0.85)",
         "labels":[],  //mark label of each value, respectively
         "labelsFont":"15px Calibri",
         "labelStyle":"rgba(64,64,64,0.8)",
@@ -332,6 +408,25 @@ miniChart Object = {
       var scale = result/10;
       return Math.floor(input / scale + 1 ) * scale;
     }
+
+    function colorChange(rgba){
+      var r, g, b;
+      var rgbaValue = rgba.substring(5, rgba.length - 1).split(",");
+      r = rgbaValue[0];
+      g = (rgbaValue[1]> 15)? rgbaValue[1] - 15 : 0;
+      b = (rgbaValue[2]> 15)? rgbaValue[2] - 15 : 0;
+      return "rgba("+r+","+g+","+b+",0.9)";
+    }
+
+    function loadJquery(){  //load jquery if original user do not have
+      if(!window.jQuery)
+      {
+         var script = document.createElement('script');
+         script.type = "text/javascript";
+         script.src = "http://code.jquery.com/jquery-1.11.1.js";
+         document.getElementsByTagName('head')[0].appendChild(script);
+      }
+    }
     /*end of function set*/
 
 // This line either passes the `window` as an argument or
@@ -361,65 +456,7 @@ function drawText(temp,tempHigh,tempLow){
 		chart.fillText(txt,15,i*hei/temp+48);
 	}
 }
-/*drawTag draw a tag, at Xth grid, temp with a label of text*//*
-function drawTag(X,curTemp,text){
-	var canvas = document.getElementById("myCanvas");
-	var chart = canvas.getContext("2d");
-  var len = Math.ceil($("#myCanvas").width() * 0.9);
-  var hei = Math.ceil($("#myCanvas").height() * 0.8);
-  var x = Math.ceil((X-0.5)*len/time+46 + 15) ; //x is the time line position
-  var y = (tempHigh - curTemp)*(hei/(tempHigh-tempLow))+44 - 18; //y1 is the temp1 line position
-	/*Draw the point*//*
-  chart.strokeStyle = "rgba(70,70,70,0.15)";
-  chart.beginPath();
-  chart.moveTo(x-15,y+18);
-  chart.lineTo(x,y);
-  chart.stroke();
-	chart.fillStyle = "#137f96";
-	chart.beginPath();
-	chart.arc(x, y, 2, 0, 2 * Math.PI);
-	chart.fill();
-	/*Draw the tag*//*
-	chart.beginPath();
-	chart.moveTo(x+4,y-4);
-	chart.lineTo(x+10,y-8);
-	chart.lineTo(x+10,y+8);
-	chart.lineTo(x+4, y+4);
-	chart.closePath();
-	chart.fill();
-  chart.fillStyle = "rgba(19,127,150,0.85)";
-	chart.beginPath();
-  chart.fillRect(x+10, y-8, 35, 16);
-  chart.fill();
-	//Draw the text
-	chart.beginPath();
-	chart.font = "8px Calibri";
-	chart.fillStyle ="#ffffff";
-	chart.fillText(text,x+12,y+2);
-}
-/*drawTag draw a label, at position(x,y) with a label of id*//*
-function drawLabel(X,temp2,text,rgba){
-	var canvas = document.getElementById("myCanvas");
-	var chart = canvas.getContext("2d");
-  var len = Math.ceil($("#myCanvas").width() * 0.9);
-  var y = (tempHigh - temp2)*(hei/(tempHigh-tempLow))+52; //y is the temp position
-  var x = Math.ceil((X-0.5)*len/time+46) ; //x is the time line position
-  /*Draw the arrow*//*
-	chart.fillStyle = rgba;
-	chart.beginPath();
-	chart.moveTo(x-3,y+3);
-	chart.lineTo(x,y-3);
-	chart.lineTo(x+3,y+3);
-  chart.closePath();
-  chart.fill();
-  //Draw the text
-  chart.fillStyle ="rgba(0,0,0,0.6)";
-	chart.beginPath();
-	chart.font = "nomal 12px Arial";
-	chart.fillText(text,x+6,y+3);
-  chart.closePath();
-  chart.fill();
-}
+
 /*drawLine(temp1,temp2,rgb) temp1,temp2: points; rgb: rgb color, X:point2 time line *//*
 function drawLine(temp1,temp2,X,rgb,w,type){
 	var canvas = document.getElementById("myCanvas");
