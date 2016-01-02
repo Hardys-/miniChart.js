@@ -271,8 +271,8 @@ miniChart Object = {
       //3 lines of info(name, value, ave),Margin top 15px, margin bottom 15 px
       var tagHeight = 40 + Math.round(fontSize*0.8*4);
       //Default offset 20px to the left
-      var tagX = (posX+10+tagWidth > canvas.width)?posX-10-tagWidth:posX+10+tagWidth;
-      var tagY = (posY+10+tagHeight > canvas.height)?posY-10-tagHeight:posY+10+tagHeight;;
+      var tagX = (posX+10+tagWidth > canvas.width)?posX-10-tagWidth:posX+10;
+      var tagY = (posY+10+tagHeight > canvas.height)?posY-10-tagHeight:posY+10;;
       //Draw background
       chart.fillStyle = object.feedbackStyle[2];
       chart.fillRect(tagX,tagY,tagWidth,tagHeight);
