@@ -1,5 +1,4 @@
 1. Bar(stacked), Pie(doughnut), Line(point), polar/radar chart
-2. simple and difault vaule support
-3. extend colorSet
-4. animation
-5. add stacked bar chart(change behavior of bar chart)
+2. extend colorSet
+3. animation
+4. add stacked bar chart(change behavior of bar chart)
