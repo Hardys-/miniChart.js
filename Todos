@@ -1,4 +1,4 @@
-1. Bar, Pie, Line chart
+1. Bar(stacked), Pie(doughnut), Line(point), polar/radar chart
 2. simple and difault vaule support
 3. extend colorSet
 4. animation
