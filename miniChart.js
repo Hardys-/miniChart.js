@@ -89,7 +89,13 @@ miniChart Object = {
         imageData = chart.getImageData(0, 0,canvas.width,canvas.height);
         //If feedback needed, start mouse event listener and initialize infoFlag
         if(object.feedback){drawMouseInfo(); infoFlag = false;}
-		}
+		};
+
+    methods.clearCanvas = function() {
+        // Set the canvas
+				chart.clearRect(0,0,canvas.width,canvas.height);
+        imageData = chart.getImageData(0, 0,canvas.width,canvas.height);
+    };
 
     // Init method setting the topic and returning the methods.
     init = function(_topic) {
