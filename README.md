@@ -57,6 +57,12 @@ Simple 3 steps to launch the chart via miniChart.js:<br/>
 			},
 			{
 				"values":[120,220,45],
+			},
+			{
+				"values":[60,270,50],
+			},
+			{
+				"values":[120,30,60]
 			}
 		]
 	};
@@ -72,6 +78,7 @@ Simple 3 steps to launch the chart via miniChart.js:<br/>
 <pre>
 	barChart.go();
 </pre>
+<img src="http://hhao.hostei.com/doc/files/CDN/miniChartSample.JPG" alt = "bar chart sample" width="280px" height="160"/>
 
 <li><h6>Examples:</h6></li>
 
