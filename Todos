@@ -1,5 +1,4 @@
 1. Bar, Pie, Line chart
 2. simple and difault vaule support
-3. color generator
-4. add legend
-5. default color for data.values
+3. extend colorSet
+4. animation
