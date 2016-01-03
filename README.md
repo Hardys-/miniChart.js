@@ -78,7 +78,7 @@ Simple 3 steps to launch the chart via miniChart.js:<br/>
 <pre>
 	barChart.go();
 </pre>
-<img src="http://hhao.hostei.com/doc/files/CDN/miniChartSample.JPG" alt = "bar chart sample" width="280px" height="160"/>
+<img src="http://hhao.hostei.com/doc/files/CDN/miniChartSample.jpg" alt = "bar chart sample" width="560px" height="320"/>
 
 <li><h6>Examples:</h6></li>
 
