@@ -172,10 +172,13 @@ miniChart Object = {
 
     function drawLegend(data){
       //Default font size is "15px Calibri",
-      var txtLen = data[0].title.length * 12; //0.6 of the font size typically is pixel number
-      var posX = canvas.width - txtLen - 10, //10 offset from right edge
-      posY = space;
+      var txtLen = space + data[0].title.length * 12; //0.6 of the font size typically is pixel number
+      var posX = canvas.width - txtLen, //10 offset from right edge
+      posY = space + 15;
 
+      //Clear rect
+      var clearLen = (posX-3+txtLen > len + object.frameStyle[1]+ space)?len + space - posX+15:txtLen-3 ;
+      chart.clearRect(posX-18,posY-9,clearLen,(data.length)*15+3);
       for(i = 0 ; i < data.length; i++){
           //Draw color square
           chart.font = "15px Calibri";
@@ -306,7 +309,7 @@ miniChart Object = {
       chart.fillText(Obj.name,tagX+10,tagY+20);   //margin-left 10px
       chart.fill();
       //Draw Ave info*/
-      chart.fillText("Ave.:"+AVE[parseInt(Obj.setNumber)],tagX+10,tagY + 23 + Math.round(fontSize*0.8));     //margin-left 10px
+      chart.fillText("Ave.: "+AVE[parseInt(Obj.setNumber)],tagX+10,tagY + 23 + Math.round(fontSize*0.8));     //margin-left 10px
       chart.fill();
       chart.save();
       //Draw color square
@@ -393,7 +396,7 @@ miniChart Object = {
         "feedback":true,    //interactive when mouseOn an object
         "feedbackStyle":["15px Calibri","rgba(255,255,255,1)","rgba(110,110,110,0.8)"],
         "title":["","20 Calibri"],
-        "lines":[4,0,"rgba(163,212,214,0.6)","rgba(70,70,70,0.2)",false,false],
+        "lines":[4,0,"rgba(71,71,71,0.2)","rgba(70,70,70,0.2)",false,false],
         "frameStyle":["line", 2],
         "frameFillStyle":  "rgba(171,171,171,0.8)",
         "max":true,   //mark the maximum value
@@ -423,7 +426,7 @@ miniChart Object = {
         var labelsArray = [];
         if(typeof obj.data[0].values !=='undefined'){                                  //check if the values exists
           for(i = 0 ; i < obj.data[0].values.length; i++){
-            labelsArray.push("data"+(i+1));
+            labelsArray.push("data "+(i+1));
           }
         }
         rslt.labels = labelsArray;
@@ -431,7 +434,32 @@ miniChart Object = {
 
       if(typeof obj.labelsFont !== "undefined") rslt.labelsFont = obj.labelsFont;
       if(typeof obj.labelStyle !== "undefined") rslt.labelStyle = obj.labelStyle;
+
+      //Format the data property
+      //Pass exist value to rslt
       if(typeof obj.data !== "undefined") rslt.data = obj.data;
+      //DataSetTemp used to foramt missing values in current rslt.data
+      var dataSetTemp = [];
+      for(i = 0 ; i < rslt.data.length; i++){
+        //Data template
+        var dataItem = {
+          "title": "category ",
+          "font":[20,"Calibri","bold","italic"],
+          "color": pickColor(),//pick up a color in default color set
+          "values":[]
+        };
+        if(typeof rslt.data[i].title !== "undefined") {
+          dataItem.title = rslt.data[i].title;
+        }else{
+          dataItem.title += (i+1);
+        };
+        if(typeof rslt.data[i].font !== "undefined") dataItem.font = rslt.data[i].font;
+        if(typeof rslt.data[i].color !== "undefined") dataItem.color = rslt.data[i].color;
+        if(typeof rslt.data[i].values !== "undefined") dataItem.values = rslt.data[i].values;
+        dataSetTemp.push(dataItem);
+      }
+      rslt.data = dataSetTemp;
+
       return rslt;
     }
 
@@ -491,6 +519,12 @@ miniChart Object = {
       return "rgba("+r+","+g+","+b+",0.9)";
     }
 
+    function pickColor(){
+      var temp = colorSet[0];
+      colorSet.splice(0,1);
+      colorSet.push(temp);
+      return temp;
+    }
     /*end of function set*/
 
 // This line either passes the `window` as an argument or
