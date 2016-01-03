@@ -152,7 +152,7 @@ miniChart Object = {
       chart.lineWidth = 1;
       chart.beginPath();
       for(i = 0; i <= grids  ; i++){
-        var txt = (i*((chartTop-chartBom)/ grids)+chartBom).toFixed(2);
+        var txt = (  ((chartTop-chartBom)/ grids + chartBom) % 1 === 0)? i*((chartTop-chartBom)/ grids)+chartBom : (i*((chartTop-chartBom)/ grids)+chartBom).toFixed(2);
         chart.fillText(txt, 5, hei+space - i*(hei-30)/grids - frame[1] + 2);
         if(lineStyle[4] && i>0){
           chart.moveTo(space+frame[1],Math.round(hei+space - i*(hei-30)/grids - frame[1]));
@@ -336,7 +336,7 @@ miniChart Object = {
 
       var chartBase = Math.ceil(canvas.width * 0.08)+Math.ceil(canvas.height * 0.8)-object.frameStyle[1];
       var chartBom = (MIN > 0)? 0: MIN;
-      var scale = ((hei - 30)/(findTop(MAX) - chartBom )).toFixed(2);
+      var scale = (hei - 30)/(findTop(MAX) - chartBom );
       var barY = (MIN > 0)? chartBase : chartBase + Math.round(MIN*scale); //start Y pos
       var chartX = Math.ceil(canvas.width * 0.08)+object.frameStyle[1]; //start X pos
 
