@@ -172,7 +172,7 @@ miniChart Object = {
 
     function drawLegend(data){
       //Default font size is "15px Calibri",
-      var txtLen = data[0].title.length * 9; //0.6 of the font size typically is pixel number
+      var txtLen = data[0].title.length * 12; //0.6 of the font size typically is pixel number
       var posX = canvas.width - txtLen - 10, //10 offset from right edge
       posY = space;
 
@@ -183,7 +183,7 @@ miniChart Object = {
           chart.fillRect(posX-15,posY+i*15+3,12,-12);
           chart.fill();
           //Darw txt
-          var legendTxt = (data[i].title.length*9 > txtLen+18)? data[i].title.substring(0,Math.round(txtLen/9))+"..":data[i].title;
+          var legendTxt = (data[i].title.length*12 > txtLen+24)? data[i].title.substring(0,Math.round(txtLen/12))+"..":data[i].title;
           chart.fillStyle = object.frameFillStyle;
           chart.fillText(legendTxt,posX,posY+i*15+3);
           chart.fill();
@@ -217,7 +217,8 @@ miniChart Object = {
             var y2 = chartObjects[i].pos[3]; //hei
 
             //found the target object
-            if( (posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)){
+            if( ((posX < x2+x1-edge && posX > x1+edge) && (posY < y2+y1 && posY > y1)) ||
+            ((posX < x2+x1-edge && posX > x1+edge) && (posY > y2+y1 && posY < y1) && y2<0) ){
               chart.fillStyle= colorChange(chartObjects[i].fillStyle);
               chart.beginPath();
               chart.fillRect(x1-2,y1-2,x2+4,y2+4);
@@ -293,7 +294,7 @@ miniChart Object = {
       //3 lines of info(name, value, ave),Margin top 15px, margin bottom 15 px
       var tagHeight = 40 + Math.round(fontSize*0.8*4);
       //Default offset 20px to the left
-      var tagX = (posX+10+tagWidth > canvas.width)?posX-10-tagWidth:posX+10;
+      var tagX = (posX+20+tagWidth > canvas.width)?posX-20-tagWidth:posX+20;
       var tagY = (posY+10+tagHeight > canvas.height)?posY-10-tagHeight:posY+10;;
       //Draw background
       chart.fillStyle = object.feedbackStyle[2];
