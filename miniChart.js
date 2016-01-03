@@ -172,13 +172,12 @@ miniChart Object = {
 
     function drawLegend(data){
       //Default font size is "15px Calibri",
-      var txtLen = space + data[0].title.length * 12; //0.6 of the font size typically is pixel number
+      var txtLen = space + data[0].title.length * 9 + object.frameStyle[1]; //0.6 of the font size typically is pixel number
       var posX = canvas.width - txtLen, //10 offset from right edge
       posY = space + 15;
 
       //Clear rect
-      var clearLen = (posX-3+txtLen > len + object.frameStyle[1]+ space)?len + space - posX+15:txtLen-3 ;
-      chart.clearRect(posX-18,posY-9,clearLen,(data.length)*15+3);
+      chart.clearRect(posX-18,posY-12,txtLen+15,(data.length)*15+5);
       for(i = 0 ; i < data.length; i++){
           //Draw color square
           chart.font = "15px Calibri";
@@ -186,7 +185,7 @@ miniChart Object = {
           chart.fillRect(posX-15,posY+i*15+3,12,-12);
           chart.fill();
           //Darw txt
-          var legendTxt = (data[i].title.length*12 > txtLen+24)? data[i].title.substring(0,Math.round(txtLen/12))+"..":data[i].title;
+          var legendTxt = (data[i].title.length*9 > txtLen+18)? data[i].title.substring(0,Math.round(txtLen/9))+"..":data[i].title;
           chart.fillStyle = object.frameFillStyle;
           chart.fillText(legendTxt,posX,posY+i*15+3);
           chart.fill();
