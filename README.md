@@ -1,8 +1,8 @@
 # miniChart
-miniChart is a simple JavaScript library with 3 different types of core charts (bar, line, pie).
+miniChart is a simple JavaScript library with 3 different types of charts (bar, line, pie).
 
 <ul>
-<li><h6>Chart Object:</h6></li>
+<li><h6>Chart Object(full):</h6></li>
 <pre>
 /*
 miniChart Object = {
@@ -51,29 +51,12 @@ Simple 3 steps to launch the chart via miniChart.js:<br/>
 	var chartObj = {
 		"canvas": canvas,
 		"chartType": "bar",
-		"title":["Test chart 2","15px Calibri"],
-		"labelStyle":"rgba(252,183,19,0.8)",
 		"data":[
 			{
 				"values":[500,12,35],
 			},
 			{
 				"values":[120,220,45],
-			},
-			{
-				"values":[60,270,50],
-			},
-			{
-				"values":[120,30,60]
-			},
-			{
-				"values":[20,50,180]
-			},
-			{
-				"values":[30,140,45]
-			},
-			{
-				"values":[230,50,80]
 			}
 		]
 	};
