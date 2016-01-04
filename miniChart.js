@@ -56,7 +56,7 @@ miniChart Object = {
         maxTag, minTag, infoFlag;                                               //chart properties
 
     //For missing color or default color
-    var colorSet=["rgba(254,97,97,0.8)","rgba(56,86,156,0.8)","rgba(29,175,153,0.8)","rgba(88,174,254,0.8)","rgba(252,183,19,0.8)",];
+    var colorSet=["rgba(254,97,97,0.8)","rgba(56,86,156,0.8)","rgba(29,175,153,0.8)","rgba(76,145,203,0.8)","rgba(76,203,199,0.8)","rgba(88,174,254,0.8)","rgba(252,183,19,0.8)","rgba(183,78,162,0.8)",];
 		// Set method
 		methods.setObject = function(_object) {
         // Set the property & value
