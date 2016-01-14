@@ -1,7 +1,8 @@
 1. Bar(stacked) chart, 
 2. Pie(doughnut) chart, 
 3. Line(point) chart, 
-4. polar/radar chart
+4. polar/radar chart,
 5. animation of bar chart 
 6. add stacked bar chart(change behavior of bar chart)
-7. urgent: multi objects: object
+7. add 100% stacked bar chart 
+8. urgent: multi objects: object in method
