@@ -1,4 +1,4 @@
-# miniChart
+# miniChart (in processing)
 miniChart is a simple JavaScript library with 3 different types of charts (bar, line, pie).
 
 <ul>
