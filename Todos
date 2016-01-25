@@ -1,8 +1,9 @@
-1. Bar(stacked) chart, 
-2. Pie(doughnut) chart, 
-3. Line(point) chart, 
-4. polar/radar chart,
-5. animation of bar chart 
-6. add stacked bar chart(change behavior of bar chart)
-7. add 100% stacked bar chart 
-8. urgent: multi objects: change test miniChart object params
+1. Bar/stacked chart 
+2. Pie/doughnut chart 
+3. Line/point chart 
+4. Polar/radar chart
+
+5. Animation of bar chart 
+6. Add stacked bar chart(change behavior of bar chart)
+7. Add 100% stacked bar chart 
+8. Urgent: multi objects: change test miniChart object params
