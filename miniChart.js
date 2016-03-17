@@ -18,6 +18,7 @@ miniChart Object = {
   "lines":[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
   "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
+  "markNumbers":true/false,
 	"max":true/false,   //mark the maximum value
 	"min":true/false,   //mark the minimum value
   "tagFillStyle":"rgba(19,127,150,0.85)",
@@ -356,6 +357,10 @@ miniChart Object = {
             if(data[i].values[j] == MIN ){minTag=[Math.round(barX+barLen/2),barY-barHei,MIN];}
             chart.fillStyle = data[i].color;                                     //set the color for current bar
             chart.fillRect(barX,barY-barHei,barLen,barHei);
+            chart.fillStyle = object.labelStyle;
+            if( object.markNumbers == true){
+                chart.fillText(data[i].values[j],barX,barY-barHei-5);//5 pixels offset
+            }
             chart.fill;
             var obj = {"pos":[barX,barY-barHei,barLen,barHei],"name":data[i].title,"value":data[i].values[j],"fillStyle": data[i].color,"setNumber":i};
             chartObjects.push(obj);
@@ -404,6 +409,7 @@ miniChart Object = {
         "lines":[4,0,"rgba(71,71,71,0.2)","rgba(70,70,70,0.2)",false,false],
         "frameStyle":["line", 2],
         "frameFillStyle":  "rgba(171,171,171,0.8)",
+        "markNumbers":false,
         "max":true,   //mark the maximum value
         "min":true,   //mark the minimum value
         "tagFillStyle":"rgba(101,101,101,0.85)",
@@ -421,6 +427,7 @@ miniChart Object = {
       if(typeof obj.lines !== "undefined") rslt.lines = obj.lines;
       if(typeof obj.frameStyle !== "undefined") rslt.frameStyle = obj.frameStyle;
       if(typeof obj.frameFillStyle !== "undefined") rslt.frameFillStyle = obj.frameFillStyle;
+      if(typeof obj.markNumbers !== "undefined") rslt.markNumbers = obj.markNumbers;
       if(typeof obj.max !== "undefined") rslt.max = obj.max;
       if(typeof obj.min !== "undefined") rslt.min = obj.min;
       if(typeof obj.tagFillStyle !== "undefined") rslt.tagFillStyle = obj.tagFillStyle;
