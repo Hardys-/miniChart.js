@@ -15,6 +15,7 @@ miniChart Object = {
   "lines":[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
   "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
+  "markNumbers":true/false,
   "max":true/false,   //mark the maximum value
   "min":true/false,   //mark the minimum value
   "tagFillStyle":"rgba(19,127,150,0.85)",
