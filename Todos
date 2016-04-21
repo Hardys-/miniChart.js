@@ -1,5 +1,9 @@
 Urgent: multi chart objects: miniChart.setObject params:
 1. Bar/stacked chart 
+   add hor/ver labels
+   make legend interactive
+   legend data can be remove from the chart(redraw the canvas)
+   canvas click-able
 2. Pie/doughnut chart 
 3. Line/point chart 
 4. Polar/radar chart
