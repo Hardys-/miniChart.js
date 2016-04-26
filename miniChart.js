@@ -14,7 +14,8 @@ miniChart Object = {
   "chartType": pie/line/bar,
   "feedback":true,    //interactive when mouse on
   "feedbackStyle":[font,fontColor,fillStyle],
-	"title": ["title of the chart","title font"],
+  "title": ["title of the chart","title font"],
+  "data_label": [label_ver,label_hor],
   "lines":[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
   "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
