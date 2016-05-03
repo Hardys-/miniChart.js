@@ -1,12 +1,13 @@
 Urgent: multi chart objects: miniChart.setObject params:
 1. Bar/stacked chart 
+   - Add stacked bar chart(change behavior of bar chart)
+   - Add 100% stacked bar chart  
    add hor/ver labels
    make legend interactive
    legend data can be remove from the chart(redraw the canvas)
    canvas click-able
 2. Pie/doughnut chart 
 3. Line/point chart 
+   use existed functions at https://github.com/admiralFedora/544/blob/master/Challenge2/node/index.html
 4. Polar/radar chart
-5. Animation of bar chart 
-6. Add stacked bar chart(change behavior of bar chart)
-7. Add 100% stacked bar chart  
+5. Animation of bar chart when drawing
