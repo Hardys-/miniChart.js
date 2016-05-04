@@ -15,7 +15,7 @@ miniChart Object = {
   "feedback":true,    //interactive when mouse on
   "feedbackStyle":[font,fontColor,fillStyle],
   "title": ["title of the chart","title font"],
-  "data_label": [label_ver,label_hor],
+  "dataLabel": [label_ver,label_hor],
   "lines":[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
   "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
@@ -407,6 +407,7 @@ miniChart Object = {
         "feedback":true,    //interactive when mouseOn an object
         "feedbackStyle":["15px Calibri","rgba(255,255,255,1)","rgba(110,110,110,0.8)"],
         "title":["","20 Calibri"],
+        "dataLabel": ["",""],
         "lines":[4,0,"rgba(71,71,71,0.2)","rgba(70,70,70,0.2)",false,false],
         "frameStyle":["line", 2],
         "frameFillStyle":  "rgba(171,171,171,0.8)",
@@ -425,6 +426,7 @@ miniChart Object = {
       if(typeof obj.feedback !== "undefined") rslt.feedback = obj.feedback;
       if(typeof obj.feedbackStyle !== "undefined") rslt.feedbackStyle = obj.feedbackStyle;
       if(typeof obj.title !== "undefined") rslt.title = obj.title;
+      if(typeof obj.dataLabel !== "undefined") rslt.title = obj.dataLabel;
       if(typeof obj.lines !== "undefined") rslt.lines = obj.lines;
       if(typeof obj.frameStyle !== "undefined") rslt.frameStyle = obj.frameStyle;
       if(typeof obj.frameFillStyle !== "undefined") rslt.frameFillStyle = obj.frameFillStyle;
