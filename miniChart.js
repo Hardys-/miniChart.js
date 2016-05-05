@@ -161,7 +161,7 @@ miniChart Object = {
       chart.beginPath();
       for(i = 0; i <= grids  ; i++){
         var txt = (  ((chartTop-chartBom)/ grids + chartBom) % 1 === 0)? i*((chartTop-chartBom)/ grids)+chartBom : (i*((chartTop-chartBom)/ grids)+chartBom).toFixed(2);
-        chart.fillText(txt, 5, hei+space - i*(hei-30)/grids - frame[1] + 2);
+        chart.fillText(txt, space-25, hei+space - i*(hei-30)/grids - frame[1] + 2);
         if(lineStyle[4] && i>0){
           chart.moveTo(space+frame[1],Math.round(hei+space - i*(hei-30)/grids - frame[1]));
           chart.lineTo(space-frame[1]+len,Math.round(hei+space - i*(hei-30)/grids - frame[1]));
@@ -169,12 +169,26 @@ miniChart Object = {
       }
     	chart.stroke();
 
-      //char title
+      // draw chart title
       var fp = (isNaN(parseInt(object.title[1])))?6:Math.round(parseInt(object.title[1]) *0.3);//default font size is 20px
       var titleX = Math.round(canvas.width/2)-object.title[0].length*fp;
       chart.fillStyle = fillStyle;
-      chart.font=object.title[1];
+      chart.font = object.title[1];
       chart.fillText(object.title[0],titleX,space+22);
+      chart.fill;
+
+      // draw vertical label, rotate needed
+      chart.rotate(270 * Math.PI / 180);
+      chart.font = "18px Calibri";
+      // default font size is "18px Calibri", make sure label is print in the middle
+      chart.fillText(object.dataLabel[0],-1 * Math.floor((hei + object.dataLabel[0].length * 9 * 1.5) / 2), 15);
+      chart.fill;
+      chart.rotate(-270*Math.PI/180);
+
+      // draw horizontal label, rotate needed
+      chart.font = "18px Calibri";
+      // default font size is "18px Calibri" (lenth * 9 pixels), make sure label is print in the middle
+      chart.fillText(object.dataLabel[1], Math.floor(( len - object.dataLabel[1].length * 9) / 2) + space, hei + space + 30);// 30 pixels under the base line
       chart.fill;
     }
 
@@ -393,7 +407,7 @@ miniChart Object = {
           var txtLen = object.labels[index].length;
           var txtMove = (barMove - barLen*0.8 > txtLen * fp)?Math.ceil((barMove - txtLen * fp - barLen*0.9) / 2): 0;
           var txt = (txtLen > num)? object.labels[index].substring(0,num-1)+"..":object.labels[index];
-          chart.fillText(txt, txtMove + labelX + chartX + Math.ceil(barLen*0.9) ,space+hei+18);
+          chart.fillText(txt, txtMove + labelX + chartX + Math.ceil(barLen*0.9) ,space+hei+13); // 13 pixels under the base line
           labelX += barMove;
       }
       chart.fill;
@@ -426,7 +440,7 @@ miniChart Object = {
       if(typeof obj.feedback !== "undefined") rslt.feedback = obj.feedback;
       if(typeof obj.feedbackStyle !== "undefined") rslt.feedbackStyle = obj.feedbackStyle;
       if(typeof obj.title !== "undefined") rslt.title = obj.title;
-      if(typeof obj.dataLabel !== "undefined") rslt.title = obj.dataLabel;
+      if(typeof obj.dataLabel !== "undefined") rslt.dataLabel = obj.dataLabel;
       if(typeof obj.lines !== "undefined") rslt.lines = obj.lines;
       if(typeof obj.frameStyle !== "undefined") rslt.frameStyle = obj.frameStyle;
       if(typeof obj.frameFillStyle !== "undefined") rslt.frameFillStyle = obj.frameFillStyle;
