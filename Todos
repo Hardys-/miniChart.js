@@ -11,3 +11,11 @@ Urgent: multi chart objects: miniChart.setObject params:
    use existed functions at https://github.com/admiralFedora/544/blob/master/Challenge2/node/index.html
 4. Polar/radar chart
 5. Animation of bar chart when drawing
+
+Structure:
+create miniChart.min.js and other js file for specific chart
+   - barChart.js
+   - pieChart.js
+   - lineChart.js
+   - polarChart.js
+   
