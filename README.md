@@ -9,9 +9,10 @@ miniChart Object = {
   "animattion": true / false,
   "canvas": canvas Object,
   "chartType": pie/line/bar,
-  "feedback":true,    //interactive feedback when mouse on
+  "feedback":true,    //interactive when mouse on
   "feedbackStyle":[font,fontColor,fillStyle],
   "title": ["title of the chart","title font"],
+  "dataLabel": [label_ver,label_hor],
   "lines":[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
   "frameStyle":["line/frame/none", width],
   "frameFillStyle":  "rgba(0,0,0,0.8)",
@@ -19,11 +20,10 @@ miniChart Object = {
   "max":true/false,   //mark the maximum value
   "min":true/false,   //mark the minimum value
   "tagFillStyle":"rgba(19,127,150,0.85)",
-
   "labels":[label1..label10], //mark label of each value, respectively
   "labelsFont":"15px Calibri",
   "labelStyle":"rgba(170,170,170,0.8)",
-  "data":[
+	"data":[
 		{ "title": titleOne,
 		  "font":[size,family,weight,style],
 			"color": "rgba(0,0,0,0.8)",
@@ -39,7 +39,7 @@ miniChart Object = {
 			"color": "rgba(0,0,0,0.8)",
 			"values":[1,2,3,4,5,6,7,8,9,0],
 		}
-  ]
+	]
 }
 */
 </pre>
