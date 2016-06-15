@@ -2,18 +2,19 @@ Urgent: multi chart objects: miniChart.setObject params:
 1. Bar/stacked chart 
    - Add stacked bar chart(change behavior of bar chart)
    - Add 100% stacked bar chart  
-   add hor/ver labels
-   make legend interactive
-   legend data can be remove from the chart(redraw the canvas)
-   canvas click-able
+   make legend interactive: show or unshow
+
 2. Pie/doughnut chart 
+
 3. Line/point chart 
    use existed functions at https://github.com/admiralFedora/544/blob/master/Challenge2/node/index.html
+
 4. Polar/radar chart
+
 5. Animation of bar chart when drawing
 
 Structure:
-create miniChart.min.js and other js file for specific chart
+create miniChart.min.js, minichart.max.js and other js file for specific chart
    - barChart.js
    - pieChart.js
    - lineChart.js
