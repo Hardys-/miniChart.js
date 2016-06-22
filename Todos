@@ -2,7 +2,7 @@ Urgent: multi chart objects: miniChart.setObject params:
 1. Bar/stacked chart 
    - Add stacked bar chart(change behavior of bar chart)
    - Add 100% stacked bar chart  
-   make legend interactive: show or unshow
+   make legend interactive: show、unshow
 
 2. Pie/doughnut chart 
 
