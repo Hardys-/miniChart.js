@@ -1,4 +1,5 @@
 Urgent: multi chart objects: miniChart.setObject params:
+ -- instance for each interactions
 1. Bar/stacked chart 
    - Add stacked bar chart(change behavior of bar chart)
    - Add 100% stacked bar chart  
