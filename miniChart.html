@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="miniChart.css">
+<title>miniChart</title>
+</head>
+
+<body>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="index.js"></script>
+<script type="text/javascript" src="miniChart.js"></script>
+
+<!-- First Chart-->
+<div class="section">
+  <div class="textarea_container">
+    <div class="textarea_header">
+      Bar Chart
+      <span class="button ion-code" title="Code block <pre><code>" data-button-type="addCode"></span>
+    </div>
+    <textarea id="bar_chart" class="textarea">
+  {
+    "chartType": "bar",
+    "title": ["miniChart - Bar Chart", "25px Arial"],
+    "labels": ["Aaron", "Brain", "Calvin", "David", "Even", "Frank", "Greg", "Harry"],
+    "data": [
+      {
+        "title": "data_one",
+        "values": [175.00, 144.17, 411.37, 74.70, 74.70, 27.50, 27.50, 74.70]
+      },
+      {
+        "title": "data_two",
+        "values": [230.00, 600.00, 350.00, 35.00, 96.00, 60.00, 120.00, 45.00]
+      },
+      {
+        "title": "data_three",
+        "values": [20, 35, 132, 525, 46, 75, 175, 22.5]
+      },
+      {
+        "title": "data_four",
+        "values": [230, 44, 10, 500, 750, 15, 340, 80]
+      }
+    ]
+  }
+    </textarea>
+  </div>
+	<canvas id="bar_chart_canvas" width="800" height="600"></canvas>
+</div>
+
+<!-- Second Chart-->
+<div class="section">
+  <div class="textarea_container">
+    <div class="textarea_header">
+      Bar Chart 2
+      <span class="button ion-code" title="Code block <pre><code>" data-button-type="addCode"></span>
+    </div>
+    <textarea id="bar_chart2" class="textarea">
+  {
+    "chartType": "bar",
+    "title": ["Car Selling Chart", "15px Arial"],
+    "lines": [8, 0, "rgba(71,71,71,0.2)", "rgba(70,70,70,0.2)", true, false],
+    "frameStyle": ["line", 2],
+    "labels": ["2011", "2012", "2013", "2014"],
+    "data": [
+      {
+        "title": "BMW",
+        "values": [115136, 146843, 152286, 155835]
+      },
+      {
+        "title": "MINI",
+        "values": [23839, 30562, 28751, 30455]
+      },
+      {
+        "title": "Rolls-Royce",
+        "values": [0, 0, 534, 496]
+      },
+      {
+        "title": "BMW Motorrad",
+        "values": [7050, 9215, 6069, 6343]
+      },
+      {
+        "title": "Husqvarna Motorcycles",
+        "values": [695, 1255, 1267]
+      }
+    ]
+  }
+    </textarea>
+  </div>
+	<canvas id="bar_chart_canvas2" width="800" height="600"></canvas>
+</div>
+
+<!-- Third Chart -->
+<div class="section">
+  <div class="textarea_container">
+    <div class="textarea_header">
+      Bar Chart3
+      <span class="button ion-code" title="Code block <pre><code>" data-button-type="addCode"></span>
+    </div>
+    <textarea id="bar_chart3" class="textarea">
+  {
+    "chartType": "bar",
+    "data": [
+      {
+        "values": [9, 3.5, 7.45, 2.5]
+      },
+      {
+        "values": [2.5, 3.5, 4.5, 2.3]
+      },
+      {
+        "values": [20.00, 160, 30, 230]
+      },
+      {
+        "values": [16, 80.00, 750.05, 300]
+      }
+    ]
+  }
+    </textarea>
+  </div>
+	<canvas id="bar_chart_canvas3" width="800" height="600"></canvas>
+</div>
+</body>
+</html>
