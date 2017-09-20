@@ -6,7 +6,7 @@ miniChart is a simple JavaScript library with 3 different types of charts (bar, 
 <pre>
 /*
 miniChart Object = {
-  "animattion": true / false,
+  "animation": true / false,
   "canvas": canvas Object,
   "chartType": pie/line/bar,
   "feedback":true,    //interactive when mouse on
@@ -48,41 +48,39 @@ miniChart Object = {
 Simple 3 steps to launch the chart via miniChart.js:<br/>
 <b>Step 1. declare your canvas & chart object</b>
 <pre>
-	var canvas = document.getElementById("canvas");
-	var chartObj = {
-		"canvas": canvas,
+	var ctx = document.getElementById("canvas");
+	var dataSet = {
 		"chartType": "bar",
-		"data":[
-			{
-				"values":[500,12,35],
-			},
-			{
-				"values":[120,220,45],
-			},
-			{
-				"values":[60,270,50],
-			},
-			{
-				"values":[120,30,60]
-			}
+		"data": [
+		{
+			"values": [500, 12, 35],
+		},
+		{
+			"values": [120, 220, 45],
+		},
+		{
+			"values": [60, 270, 50],
+		},
+		{
+			"values": [120, 30, 60]
+		}
 		]
 	};
 </pre>
 
-<b>Step 2. Use a instance of miniChart & set the object</b>
+<b>Step 2. Use a instance of miniChart & set the canvas and dataSet</b>
 <pre>
-	var barChart = new miniChart();
-	barChart.setObject(chartObj);
+	var barChart = new miniChart(ctx, dataSet);
 </pre>
 
 <b>Step 3. Launch the chart!</b>
 <pre>
 	barChart.go();
 </pre>
-<img src="http://hhao.hostei.com/doc/files/CDN/miniChartSample.jpg" alt = "bar chart sample" width="560px" height="320"/>
+<img src="https://haohu.000webhostapp.com/cdn/miniChart/miniChart.JPG" alt = "bar chart sample" width="560px" height="320"/>
 
 <li><h6>Examples:</h6></li>
-
+https://haohu.000webhostapp.com/cdn/miniChart/miniChart.jpg
 </ul>
 <h6>Bar Chart:</h6>
 
