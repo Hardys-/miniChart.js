@@ -80,7 +80,7 @@ Simple 3 steps to launch the chart via miniChart.js:<br/>
 <img src="https://haohu.000webhostapp.com/cdn/miniChart/miniChart.JPG" alt = "bar chart sample" width="560px" height="320"/>
 
 <li><h6>Examples:</h6></li>
-https://haohu.000webhostapp.com/cdn/miniChart/miniChart.jpg
+https://haohu.000webhostapp.com/cdn/miniChart/miniChart.html
 </ul>
 <h6>Bar Chart:</h6>
 
