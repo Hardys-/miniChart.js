@@ -1,5 +1,20 @@
 $( document ).ready(function() {
 
+  // Detect if current device is Mobile
+ 	function detectMobile() {
+    if ( navigator.userAgent.match(/Android/i)
+         || navigator.userAgent.match(/webOS/i)
+         || navigator.userAgent.match(/iPhone/i)
+         || navigator.userAgent.match(/iPod/i)
+         || navigator.userAgent.match(/BlackBerry/i)
+         || navigator.userAgent.match(/Windows Phone/i)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+	}
+
 	var barChartCanvas = document.getElementById("bar_chart_canvas");
 	var barChartCanvas2 = document.getElementById("bar_chart_canvas2");
   var barChartCanvas3 = document.getElementById("bar_chart_canvas3");
@@ -13,16 +28,27 @@ $( document ).ready(function() {
 	let chartThree = new miniChart(barChartCanvas3, barChartData3);
 
 	chartOne.go();
-	//chartTwo.go();
-	//chartThree.go();
+	chartTwo.go();
+	chartThree.go();
+
+	if (detectMobile()) {
+		$('.section').css({
+			'padding': '15%'
+		});
+		$('.textarea_container').css({
+			'width': '100%'
+		});
+		$('.textarea').css({
+			'fint-size': '20px'
+		});
+	}
 
   var slowParse;
 	$("#bar_chart").keyup(function() {
 		clearTimeout(slowParse);
 		slowParse = setTimeout(function() {
 			const barChartData = JSON.parse($("#bar_chart").val());
-			const barChart = new miniChart(barChartCanvas, barChartData);
-			barChart.go();
+			chartOne.updateDataSet(barChartData);
 		}, 500);
 	});
 
@@ -30,8 +56,7 @@ $( document ).ready(function() {
 		clearTimeout(slowParse);
 		slowParse = setTimeout(function() {
 			const barChartData2 = JSON.parse($("#bar_chart2").val());
-			const barChart2 = new miniChart(barChartCanvas2, barChartData2);
-			barChart2.go();
+			chartTwo.updateDataSet(barChartData2);
 		}, 500);
 	});
 
@@ -39,8 +64,7 @@ $( document ).ready(function() {
 		clearTimeout(slowParse);
 		slowParse = setTimeout(function() {
 			const barChartData3 = JSON.parse($("#bar_chart3").val());
-			const barChart3 = new miniChart(barChartCanvas3, barChartData3);
-			barChart3.go();
+			chartThree.updateDataSet(barChartData3);
 		}, 500);
 	});
 });

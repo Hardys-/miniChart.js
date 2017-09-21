@@ -9,40 +9,40 @@
 
 /*
 miniChart Object = {
-	"animattion": true / false,
-  "canvas": canvas Object,
-  "chartType": pie/line/bar,
-  "feedback":true,    //interactive when mouse on
-  "feedbackStyle":[font,fontColor,fillStyle],
-  "title": ["title of the chart","title font"],
-  "dataLabel": [label_ver,label_hor],
-  "lines":[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
-  "frameStyle":["line/frame/none", width],
-  "frameFillStyle":  "rgba(0,0,0,0.8)",
-  "markNumbers":true/false,
-	"max":true/false,   //mark the maximum value
-	"min":true/false,   //mark the minimum value
-  "tagFillStyle":"rgba(19,127,150,0.85)",
+	animation: true / false,
+  canvas: canvas Object,
+  chartType: pie/line/bar,
+  feedback:true,    //interactive when mouse on
+  feedbackStyle:[font,fontColor,fillStyle],
+  title: [title of the chart,title font],
+  dataLabel: [label_ver,label_hor],
+  lines:[# of hor lines,# of ver lines,hor lines fillStyle,ver lines fillStyle,draw hor line, draw ver line],
+  frameStyle:[line/frame/none, width],
+  frameFillStyle:  rgba(0,0,0,0.8),
+  markNumbers:true/false,
+	max:true/false,   //mark the maximum value
+	min:true/false,   //mark the minimum value
+  tagFillStyle:rgba(19,127,150,0.85),
 
-  "labels":[label1..label10], //mark label of each value, respectively
-  "labelsFont":"15px Calibri",
-  "labelStyle":"rgba(170,170,170,0.8)",
+  labels:[label1..label10], //mark label of each value, respectively
+  labelsFont:15px Calibri,
+  labelStyle:rgba(170,170,170,0.8),
 
-	"data":[
-		{ "title": titleOne,
-		  "font":[size,family,weight,style],
-			"color": "rgba(0,0,0,0.8)",
-			"values":[1,2,3,4,5,6,7,8,9,0];
+	data:[
+		{ title: titleOne,
+		  font:[size,family,weight,style],
+			color: rgba(0,0,0,0.8),
+			values:[1,2,3,4,5,6,7,8,9,0];
 		},
-		{ "title": titleTwo,
-		  "font":[size,family,weight,style],
-			"color": "rgba(0,0,0,0.8)",
-			"values":[1,2,3,4,5,6,7,8,9,0],
+		{ title: titleTwo,
+		  font:[size,family,weight,style],
+			color: rgba(0,0,0,0.8),
+			values:[1,2,3,4,5,6,7,8,9,0],
 		},
-		{ "title": titleThree,
-		  "font":[size,family,weight,style],
-			"color": "rgba(0,0,0,0.8)",
-			"values":[1,2,3,4,5,6,7,8,9,0],
+		{ title: titleThree,
+		  font:[size,family,weight,style],
+			color: rgba(0,0,0,0.8),
+			values:[1,2,3,4,5,6,7,8,9,0],
 		}
 	]
 }
@@ -58,22 +58,22 @@ class miniChart {
       this.ctx = ctx;
       this.ave = [];
       this.colorSet = [
-        "rgba(254,97,97,0.8)",
-        "rgba(88,174,254,0.8)",
-        "rgba(131,211,91,0.8)",
-        "rgba(56,86,156,0.8)",
-        "rgba(252,183,19,0.8)",
-        "rgba(248,118,48,0.8)",
-        "rgba(29,175,193,0.8)",
-        "rgba(183,78,162,0.8)",
-        "rgba(235,61,61,0.8)",
-        "rgba(76,145,253,0.8)",
-        "rgba(76,203,199,0.8)",
-        "rgba(29,175,153,0.8)",
-        "rgba(252,92,175,0.8)",
-        "rgba(76,145,203,0.8)"
+        'rgba(254,97,97,0.8)',
+        'rgba(88,174,254,0.8)',
+        'rgba(131,211,91,0.8)',
+        'rgba(56,86,156,0.8)',
+        'rgba(252,183,19,0.8)',
+        'rgba(248,118,48,0.8)',
+        'rgba(29,175,193,0.8)',
+        'rgba(183,78,162,0.8)',
+        'rgba(235,61,61,0.8)',
+        'rgba(76,145,253,0.8)',
+        'rgba(76,203,199,0.8)',
+        'rgba(29,175,153,0.8)',
+        'rgba(252,92,175,0.8)',
+        'rgba(76,145,203,0.8)'
       ];
-      this.chart = ctx.getContext("2d");
+      this.chart = ctx.getContext('2d');
       this.dataSet = this.format(dataSet);
       this.min = this.findMin(this.dataSet.data);
       this.max = this.findMax(this.dataSet.data);
@@ -87,10 +87,22 @@ class miniChart {
 
   }
 
+  updateDataSet(newDataSet) {
+    this.ave = [];
+    this.dataSet = this.format(newDataSet);
+    this.min = this.findMin(newDataSet.data);
+    this.max = this.findMax(newDataSet.data);
+    this.maxTag = [0, 0];
+    this.minTag = [0, 0];
+    this.chartObjects = [];
+    this.infoFlag = false;
+    this.go();
+  }
+
   go() {
     this.clearCanvas();
     this.drawFrame(this.dataSet.lines, this.dataSet.title, this.dataSet.frameStyle, this.dataSet.frameFillStyle);
-    if (this.dataSet.chartType == "bar") {
+    if (this.dataSet.chartType == 'bar') {
       this.barChart(this.dataSet.data);
       this.drawLegend(this.dataSet.data);
     }
@@ -110,10 +122,10 @@ class miniChart {
 
   format(obj){
     var rslt = { //default values
-      "animattion": true,
-      "chartType": "bar",
-      "feedback":true,    //interactive when mouseOn an object
-      "feedbackStyle":["15px Calibri","rgba(255,255,255,1)","rgba(110,110,110,0.8)"],
+      animattion: true,
+      chartType: "bar",
+      feedback: true,    //interactive when mouseOn an object
+      feedbackStyle:["15px Calibri","rgba(255,255,255,1)","rgba(110,110,110,0.8)"],
       "title":["","20 Calibri"],
       "dataLabel": ["",""],
       "lines":[4,0,"rgba(71,71,71,0.2)","rgba(70,70,70,0.2)",false,false],
